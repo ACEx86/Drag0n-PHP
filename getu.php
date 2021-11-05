@@ -4,7 +4,7 @@
 // This script sends the UserNames of the Users that contacted a User Account.
 // This script also has the ability to delete all info of UserNames that contacted the client on read and can be set by client (Logged User).
 // * Data Actions *
-// Description: The script by default know who contacted the User last and after it sended the contacted Users data once and won't send all the data to client more than once unless specified.
+// Description: The script by default know who contacted the User last, after it sended the contacted Users data once and won't send all the data to client more than once unless specified.
 // If i = NUMBER is 1 it deletes user data after read.
 // If i = NUMBER is 3 it will send all the contacted Users data to client again.
 // * Extended logging Setup *
