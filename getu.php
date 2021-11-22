@@ -164,9 +164,8 @@ class ThisIsNotTheMainTheater{
 	}
 	// * * *
 	// Remove duplicate and some invalid.
-	// Todo Mode
+	// Todo Mode -> Currently updating
 	private function CFMess($tmp_CF_Data){
-		is_string($tmp_CF_Data) === True ?: $tmp_CF_Data = " ";
 		$tmp_CFM_Return = " ";
 		if(!empty($tmp_CF_Data) and is_string($tmp_CF_Data) === True){
 			$tmp_CFM_Count = 0;
