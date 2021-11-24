@@ -378,7 +378,6 @@ Class GetU_Class{
 	}
 	Private function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
 		$tmp_ipaddress = "127.0.0.1";
-		echo $this->AllowedChars;
 		if(!empty($_SERVER) and is_array($_SERVER) === True and in_array('REMOTE_ADDR', $_SERVER) === True){
 			$tmp_ipaddress = $_SERVER["REMOTE_ADDR"] ?: " ";
 		}
@@ -403,19 +402,12 @@ Class GetU_Class{
 				$bansfolder = "../Dba/iprb/";
 				clearstatcache($bansfolder);
 				if(file_exists($bansfolder) === False){
-					$rootfolder = "/Dba";
+					$rootfolder = "../Dba";
 					clearstatcache($rootfolder);
 					if(file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
 						mkdir($rootfolder, 0600) === True ?: $this->Extended_Logging("AA");
 					}elseif(is_writeable($rootfolder) === False){
 						$this->Extended_Logging("AA");
-					}else{
-						clearstatcache($rootfolder);
-						echo 'sss'.$rootfolder;
-						if(is_writeable($rootfolder) === True){
-							mkdir($rootfolder, 0600) === True ?: $this->Extended_Logging("AA");
-						}
-						
 					}
 					clearstatcache($bansfolder);
 					if(is_writeable($bansfolder) === True){
