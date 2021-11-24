@@ -33,9 +33,11 @@ $GetU = new GetU_Class($Get_UserName, $Get_AccessToken, $Get_SACData);
 //
 Class GetU_Class{
 	// Set Variables
-	Private $IsFunctionInUse = False;
-	Private $IsBPacketUsed = False;
-	Private $ExtendedLogging_E = True;
+	Private Bool $IsFunctionInUse = False;
+	Private Bool $IsBPacketUsed = False;
+	Private Bool $ExtendedLogging_E = True;
+	Private String $AllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	Private String $AllowedNums = "0123456789";
 	// Start Functions
 	// * * *
 	// Path Checker : Validation of path
@@ -363,22 +365,20 @@ Class GetU_Class{
 	private function Extended_Logging($ELData){
 		$Extended_Logging_folder = "../Dba/Logs";
 		clearstatcache($Extended_Logging_folder);
-		if(file_exists($Extended_Logging_folder) === false){
+		if(file_exists($Extended_Logging_folder) === False and is_writeable($Extended_Logging_folder) === True){
 			mkdir($Extended_Logging_folder, 0600);
 		}
 		$Extended_Logging_file = "../Dba/logs/getu.php.log";
-		PathCheck($Extended_Logging_file);
 		clearstatcache($Extended_Logging_file);
-		if(file_exists($Extended_Logging_file) === true){
+		if(file_exists($Extended_Logging_file) === True and is_writeable($Extended_Logging_file) === True){
 			file_get_contents($Extended_Logging_file);
 			file_put_contents($Extended_Logging_file);
 			$Extended_Logging_data = $ELData;
 		}
 	}
 	Private function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
-		//$this->$IsBPacketUsed = False;
-
 		$tmp_ipaddress = "127.0.0.1";
+		echo $this->AllowedChars;
 		if(!empty($_SERVER) and is_array($_SERVER) === True and in_array('REMOTE_ADDR', $_SERVER) === True){
 			$tmp_ipaddress = $_SERVER["REMOTE_ADDR"] ?: " ";
 		}
@@ -403,24 +403,32 @@ Class GetU_Class{
 				$bansfolder = "../Dba/iprb/";
 				clearstatcache($bansfolder);
 				if(file_exists($bansfolder) === False){
-					$rootfolder = "../Dba";
+					$rootfolder = "/Dba";
 					clearstatcache($rootfolder);
 					if(file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
-						mkdir($rootfolder, 0600) === True ?: $this->Extended_Logging();
+						mkdir($rootfolder, 0600) === True ?: $this->Extended_Logging("AA");
 					}elseif(is_writeable($rootfolder) === False){
-						$this->Extended_Logging();
-					}
-					if(is_writeable($bansfolder) === True){
-						mkdir($bansfolder, 0600) === True ?: $this->Extended_Logging();
+						$this->Extended_Logging("AA");
 					}else{
-						$this->Extended_Logging();
+						clearstatcache($rootfolder);
+						echo 'sss'.$rootfolder;
+						if(is_writeable($rootfolder) === True){
+							mkdir($rootfolder, 0600) === True ?: $this->Extended_Logging("AA");
+						}
+						
+					}
+					clearstatcache($bansfolder);
+					if(is_writeable($bansfolder) === True){
+						mkdir($bansfolder, 0600) === True ?: $this->Extended_Logging("AA");
+					}else{
+						$this->Extended_Logging("AA");
 					}
 				}
 				clearstatcache($bannedforhourfolder);
 				if(is_writeable($bannedforhourfolder) === True){
-					mkdir($bannedforhourfolder, 0600) === True ?: $this->Extended_Logging();
+					mkdir($bannedforhourfolder, 0600) === True ?: $this->Extended_Logging("AA");
 				}else{
-					$this->Extended_Logging();
+					$this->Extended_Logging("AA");
 				}
 			}
 			$onefileip = "../Dba/iprb/".$tmp_daymonthyearhour."/1.".$tmp_ipaddress.".bip";
@@ -429,21 +437,24 @@ Class GetU_Class{
 			$fourfileip = "../Dba/iprb/".$tmp_daymonthyearhour."/4.".$tmp_ipaddress.".bip";
 			$fivefileip = "../Dba/iprb/".$tmp_daymonthyearhour."/5.".$tmp_ipaddress.".bip";
 			$tmp_ip_blockedrequests = 0;
-			clearstatcache();
-			if(file_exists($fivefileip)){
-				$tmp_ip_blockedrequests = 5;
-			}elseif(file_exists($fourfileip)){
-				$tmp_ip_blockedrequests = 4;
-			}elseif(file_exists($threefileip)){
-				$tmp_ip_blockedrequests = 3;
-			}elseif(file_exists($twofileip)){
-				$tmp_ip_blockedrequests = 2;
-			}elseif(file_exists($onefileip)){
-				$tmp_ip_blockedrequests = 1;
+			clearstatcache($bannedforhourfolder);
+			if(file_exists($bannedforhourfolder) === True){
+				clearstatcache();
+				if(file_exists($fivefileip)){
+					$tmp_ip_blockedrequests = 5;
+				}elseif(file_exists($fourfileip)){
+					$tmp_ip_blockedrequests = 4;
+				}elseif(file_exists($threefileip)){
+					$tmp_ip_blockedrequests = 3;
+				}elseif(file_exists($twofileip)){
+					$tmp_ip_blockedrequests = 2;
+				}elseif(file_exists($onefileip)){
+					$tmp_ip_blockedrequests = 1;
+				}
 			}
 			if($tmp_ip_blockedrequests >= 0 and $tmp_ip_blockedrequests < 5){
 				is_string($Get_UserName) === true ? $UserName = urlencode($Get_UserName) : $UserName = " ";
-				is_string($Get_AccessToken) === true ? $AccessToken = $Get_AccessToken : $AccessToken = " " ;
+				is_string($Get_AccessToken) === true ? $AccessToken = $Get_AccessToken : $AccessToken = " ";
 				is_string($Get_SACData) === true ? $SACData = urlencode($Get_SACData) : $SACData = 2;
 				// Set allowed chars
 				$tmp_allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -695,7 +706,8 @@ Class GetU_Class{
 			echo "Packet!"; // There is no ip so we can't count. Just output Packet for this.
 		}
 	}
-	// *
+	// * * *
+	// Construct
 	public function __construct($Get_UserName, $Get_AccessToken, $Get_SACData){
 		$this->IsBPacketUsed = False;
 		$this->IsFunctionInUse = False;
