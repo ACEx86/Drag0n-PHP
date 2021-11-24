@@ -24,11 +24,10 @@ $Get_UserName = $_GET['n'] ?: null; // Username
 $Get_AccessToken = $_GET['p'] ?: null; // AccessToken
 $Get_SACData = $_GET['i'] ?: 2; // Data Actions
 unset($_GET);
-//Todo Mode
-$myfriend = new ThisIsNotTheMainTheater;
-$myfriend.ConstWhatFor($Get_UserName);
+$GetU = new GetU_Class;
+$GetU->GetU_Start();
 //
-class ThisIsNotTheMainTheater{
+Class GetU_Class{
 	// Set Variables
 	Private $IsFunctionInUse = False;
 	Private $IsBPacketUsed = False;
@@ -334,7 +333,6 @@ class ThisIsNotTheMainTheater{
 						}
 					}
 				}else{
-					//
 					if((int)$ptmptime === 0){
 						$ptmptime = 5;
 						$tmpfileip = "../Dba/iprb/".$ptmp_daymonthyearhour."/".$ptmptime.".".$ptmp_ipaddress.".bip";
@@ -373,8 +371,11 @@ class ThisIsNotTheMainTheater{
 			$Extended_Logging_data = $ELData;
 		}
 	}
-	public function constwhatfor(){
-		$tmp_ipaddress = $_SERVER["REMOTE_ADDR"] ?: " ";
+	public function GetU_Start(){
+		$tmp_ipaddress = " ";
+		if(!empty($_SERVER) and is_array($_SERVER) === True and in_array('REMOTE_ADDR', $_SERVER) === True){
+			$tmp_ipaddress = $_SERVER["REMOTE_ADDR"] ?: " ";
+		}
 		if(is_string($tmp_ipaddress) === true and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, ".") === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ":") > 2 and substr_count($tmp_ipaddress, ":") < 8))){
 			$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: " "; // X2
 		}else{
