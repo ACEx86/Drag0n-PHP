@@ -20,9 +20,9 @@
 // Sends *1. n=USERNAME *2. p=ACCESSTOKEN:NUMBER *3. i=NUMBER
 // / *
 date_default_timezone_set('UTC');
-$Get_UserName = $_GET['n'] ?: null); // Username
-$Get_AccessToken = $_GET['p'] ?: null); // AccessToken
-$Get_SACData = $_GET['i'] ?: 2); // Data Actions
+$Get_UserName = $_GET['n'] ?: null; // Username
+$Get_AccessToken = $_GET['p'] ?: null; // AccessToken
+$Get_SACData = $_GET['i'] ?: 2; // Data Actions
 unset($_GET);
 //Todo Mode
 $myfriend = new ThisIsNotTheMainTheater;
@@ -37,10 +37,10 @@ class ThisIsNotTheMainTheater{
 	// * * *
 	// Path Checker : Validation of path
 	// Todo Mode
-	private fuction PathCheck($tmp_Path, $tmp_Details){
+	private static function PathCheck($tmp_Path, $tmp_Details){
 		// Fast check of provided data.
-		is_string($tmp_Path) === True ?: return False;
-		is_string($tmp_Details) === True ?: return False;
+		is_string($tmp_Path) === True ?: "";
+		is_string($tmp_Details) === True ?: "";
 		// Set Variables
 		$tmp_PC_PathLength = 1;
 		$tmp_PC_findDot = 0;
@@ -70,8 +70,8 @@ class ThisIsNotTheMainTheater{
 				if($tmp_PC_StaticOne === True){
 					$tmp_PC_getExtension = explode($tmp_Path, ".")((int)$tmp_PC_findDot-1) ?: " ";
 					if($tmp_PC_getExtension === $tmp_PC_AllowedExtensionThree){ //bip
-						$tmp_PC_findDot === 4 ?: return False;
-						$tmp_PC_findSlash === 4 ?: return False;
+						$tmp_PC_findDot === 4 ?: "return False";
+						$tmp_PC_findSlash === 4 ?: "return False";
 						if($tmp_PC_PathLength === 147){
 						//
 						}
@@ -85,12 +85,12 @@ class ThisIsNotTheMainTheater{
 					}
 				}
 				if($tmp_PC_StaticTwo === True){
-					$tmp_PC_findDot === 3 ?: return False;
-					$tmp_PC_findSlash === 4 ?: return False;
+					$tmp_PC_findDot === 3 ?: "return False";
+					$tmp_PC_findSlash === 4 ?: "return False";
 					if($tmp_PC_PathLength > 66 and $tmp_PC_PathLength < 100){
-						return True;
+						"return True";
 					}else{
-						return False;
+						"return False";
 					}
 					$tmp_PC_getExtension = explode($tmp_Path, ".")((int)$tmp_findme) ?: " ";
 					if(str_contains($tmp_PC_getExtension, "inUse") === True and substr_count($tmp_PC_getExtension) === 5){
@@ -186,7 +186,7 @@ class ThisIsNotTheMainTheater{
 					$tmp_CFM_tmp = " ";
 					$tmp_CFM_tmpLength = 0;
 					$tmp_CFM_tmp = explode(";", $tmp_CF_Data)[$x] . ";" ?: $tmp_CFM_Return = " ";
-					$tmp_CFM_tmpLength = (strlen($tmp_CFM_tmp) ?: $tmp_CFM_tmpLength = 0;
+					$tmp_CFM_tmpLength = strlen($tmp_CFM_tmp) ?: $tmp_CFM_tmpLength = 0;
 					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) == false and $tmp_CFM_tmpLength > 4 and $tmp_CFM_tmpLength < 15){
 						$tmp_CFM_AllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789;";
 						for($n = 0; $n < strlen($tmp_CFM_tmp); $n++){
@@ -235,7 +235,7 @@ class ThisIsNotTheMainTheater{
 	}
 	// * * *
 	// Server Response And Data
-	private void function SResponse($SData){
+	private function SResponse($SData){
 		is_string($SData) === True ?: $SData = "Packet!";
 		$OneZeroTwoFour = 1024;
 		$TwoZeroFourEight = 2048;
@@ -260,14 +260,6 @@ class ThisIsNotTheMainTheater{
 			}else{
 				$SData[4094] = " ";
 			}
-		}
-	}
-	// * * *
-	// User Check
-	private function UserWhatA($amn){
-		is_string($amn) === true ?: $amn = " ";
-		if(strlen($amn) > 17 and strlen($amn) < ){
-			
 		}
 	}
 	// * * *
@@ -309,7 +301,7 @@ class ThisIsNotTheMainTheater{
 		}
 		return $ptmp_ipaddress;
 	}
-	private void function BPacket($exponent, $ptmp_daymonthyearhour, $ptmptime, $ptmp_ipaddress){
+	private function BPacket($exponent, $ptmp_daymonthyearhour, $ptmptime, $ptmp_ipaddress){
 		if($IsBPacketUsed === False){
 			$IsBPacketUsed = True;
 			$ptmp_daymonthyearhour = FixDate($ptmp_daymonthyearhour) ?: " ";
@@ -381,7 +373,7 @@ class ThisIsNotTheMainTheater{
 			$Extended_Logging_data = $ELData;
 		}
 	}
-	public function $constwhatfor(){
+	public function constwhatfor(){
 		$tmp_ipaddress = $_SERVER["REMOTE_ADDR"] ?: " ";
 		if(is_string($tmp_ipaddress) === true and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, ".") === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ":") > 2 and substr_count($tmp_ipaddress, ":") < 8))){
 			$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: " "; // X2
