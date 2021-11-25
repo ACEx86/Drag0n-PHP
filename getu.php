@@ -26,7 +26,7 @@ $Get_SACData = 2; // Data Actions
 if(!empty($_GET) and is_array($_GET) === True){
 	in_array('n', $_GET) === True ? $Get_UserName = $_GET['n'] : null;
 	in_array('p', $_GET) === True ? $Get_AccessToken = $_GET['p'] : null;
-	in_array('i', $_GET) === True ? $Get_SACData = $_GET['i']: $Get_SACData = 2;
+	in_array('i', $_GET) === True ? $Get_SACData = $_GET['i'] : $Get_SACData = 2;
 }
 unset($_GET);
 $GetU = new GetU_Class($Get_UserName, $Get_AccessToken, $Get_SACData);
@@ -405,22 +405,28 @@ Class GetU_Class{
 					$rootfolder = "../Dba";
 					clearstatcache($rootfolder);
 					if(file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
-						mkdir($rootfolder, 0600) === True ?: $this->Extended_Logging("AA");
+						if(mkdir($rootfolder, 0600) === False and $this->ExtendedLogging_E === True){
+							$this->Extended_Logging("AA");
+						}
 					}elseif(is_writeable($rootfolder) === False){
-						$this->Extended_Logging("AA");
+						$this->ExtendedLogging_E === False ?: $this->Extended_Logging("AA");
 					}
 					clearstatcache($bansfolder);
 					if(is_writeable($bansfolder) === True){
-						mkdir($bansfolder, 0600) === True ?: $this->Extended_Logging("AA");
+						if(mkdir($bansfolder, 0600) === False and $this->ExtendedLogging_E === True){
+							$this->Extended_Logging("AA");
+						}
 					}else{
-						$this->Extended_Logging("AA");
+						$this->ExtendedLogging_E === False ?: $this->Extended_Logging("AA");
 					}
 				}
 				clearstatcache($bannedforhourfolder);
 				if(is_writeable($bannedforhourfolder) === True){
-					mkdir($bannedforhourfolder, 0600) === True ?: $this->Extended_Logging("AA");
+					if(mkdir($bannedforhourfolder, 0600) === False and $this->ExtendedLogging_E === True){
+						$this->Extended_Logging("AA");
+					}
 				}else{
-					$this->Extended_Logging("AA");
+					$this->ExtendedLogging_E === False ?: $this->Extended_Logging("AA");
 				}
 			}
 			$onefileip = "../Dba/iprb/".$tmp_daymonthyearhour."/1.".$tmp_ipaddress.".bip";
@@ -699,7 +705,7 @@ Class GetU_Class{
 		}
 	}
 	// * * *
-	// Construct
+	// Construct..OR?
 	public function __construct($Get_UserName, $Get_AccessToken, $Get_SACData){
 		$this->IsBPacketUsed = False;
 		$this->IsFunctionInUse = False;
