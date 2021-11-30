@@ -176,7 +176,7 @@ Class GetU_Class{
 								break;
 							}
 							$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
-							if(!empty($tmp_CFM_tmpName) and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
+							if(!empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmpName) === True and strlen($tmp_CFM_tmpName) === 1 and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
 								if((str_contains(";" , $tmp_CFM_tmpName) === True and $n !== ($tmp_CFM_tmpLength - 1)) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n === ($tmp_CFM_tmpLength - 1))){
 									$tmp_CFM_tmp = " ";
 									break;
