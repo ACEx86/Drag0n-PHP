@@ -44,14 +44,13 @@ Class GetU_Class{
 	// Todo Mode
 	private static function PathCheck($tmp_Path, $tmp_Details){
 		// Fast check of provided data.
-		is_string($tmp_Path) === True ?: "";
-		is_string($tmp_Details) === True ?: "";
+		is_string($tmp_Path) === True ?: $tmp_Path = " ";
+		is_string($tmp_Details) === True ?: $tmp_Details = " ";
 		// Set Variables
 		$tmp_PC_PathLength = 1;
 		$tmp_PC_findDot = 0;
 		$tmp_PC_findSlash = 0;
-		$tmp_PC_StaticOne = False; // Dba
-		$tmp_PC_StaticTwo = False; // Dbu
+		$tmp_PC_StaticGet = " ";
 		$tmp_PC_getExtension = " ";
 		$tmp_PC_AllowedExtensionOne = "mdma";
 		$tmp_PC_AllowedExtensionTwo = "inUse";
@@ -64,17 +63,13 @@ Class GetU_Class{
 		}elseif((int)$tmp_PC_PathLength === 1){
 			return False;
 		}else{
-
-			$tmp_PC_StaticOne = str_contains($tmp_Path, "../Dba/") ?: False;
-			$tmp_PC_StaticTwo = str_contains($tmp_Path, "../Dbu/") ?: False;
-			if(($tmp_PC_StaticOne === False and $tmp_PC_StaticTwo === False) or ($tmp_PC_StaticOne === True and $tmp_PC_StaticTwo === True)){
-				return False;
-			}else{
-				$tmp_PC_findDot = substr_count($tmp_Path, ".") ?: 0;
-				$tmp_PC_findSlash = substr_count($tmp_Path, "/") ?: 0;
-				if($tmp_PC_StaticOne === True){
-					$tmp_PC_getExtension = explode($tmp_Path, ".")((int)$tmp_PC_findDot-1) ?: " ";
-					if($tmp_PC_getExtension === $tmp_PC_AllowedExtensionThree){ //bip
+			if(!empty($tmp_Path) and is_string($tmp_Path) === True and strlen($tmp_PC_PathLength) > 7){
+				$tmp_PC_StaticGet = $tmp_Path[0] . $tmp_Path[1] . $tmp_Path[3] . $tmp_Path[4] . $tmp_Path[5] . $tmp_Path[6] ?: $tmp_PC_StaticGet = " ";
+				if(str_contains($tmp_Path, "../Dba/") and $tmp_PC_StaticGet === "../Dba/"){
+					$tmp_PC_findDot = substr_count($tmp_Path, ".") ?: 0;
+					$tmp_PC_findSlash = substr_count($tmp_Path, "/") ?: 0;
+					$tmp_PC_getExtension = explode($tmp_Path, ".")((int)$tmp_PC_findDot-1) ?: $tmp_PC_getExtension = " ";
+					if(!empty($tmp_PC_getExtension) and is_string($tmp_PC_getExtension) === True and strlen($tmp_PC_getExtension) === 3 and $tmp_PC_getExtension === $tmp_PC_AllowedExtensionThree){ //bip
 						$tmp_PC_findDot === 4 ?: "return False";
 						$tmp_PC_findSlash === 4 ?: "return False";
 						if($tmp_PC_PathLength === 147){
@@ -83,24 +78,10 @@ Class GetU_Class{
 					}else{
 						return False;
 					}
-					if($tmp_PC_PathLength > 66 and $tmp_PC_PathLength < 100){
-						return True;
-					}else{
-						return False;
-					}
-				}
-				if($tmp_PC_StaticTwo === True){
-					$tmp_PC_findDot === 3 ?: "return False";
-					$tmp_PC_findSlash === 4 ?: "return False";
-					if($tmp_PC_PathLength > 66 and $tmp_PC_PathLength < 100){
-						"return True";
-					}else{
-						"return False";
-					}
-					$tmp_PC_getExtension = explode($tmp_Path, ".")((int)$tmp_findme) ?: " ";
-					if(str_contains($tmp_PC_getExtension, "inUse") === True and substr_count($tmp_PC_getExtension) === 5){
-						//
-					}
+				}elseif(str_contains($tmp_Path, "../Dbu/") and $tmp_PC_StaticGet === "../Dbu/"){
+					//
+				}else{
+					//
 				}
 			}
 		}
@@ -174,45 +155,46 @@ Class GetU_Class{
 		$tmp_CFM_Return = " ";
 		if(!empty($tmp_CF_Data) and is_string($tmp_CF_Data) === True){
 			$tmp_CFM_Count = 0;
+			$tmp_CFM_DataLength = 0;
 			$tmp_CFM_Count = substr_count($tmp_CF_Data, ";") ?: $tmp_CFM_Count = 0;
-			if($tmp_CFM_Count > 0){
-				// Extended Logging detect corrupted data with fast calculation
-				if($ExtendedLogging_E === True){
-					if($tmp_CFM_Count != 0){
-						$tmp_CFM_EL_Min = (int)$tmp_CFM_Count * 5;
-						$tmp_CFM_EL_Max = (int)$tmp_CFM_Count * 15;
-						$tmp_CFM_DataLength = strlen($tmp_CF_Data);
-						if(($tmp_CFM_DataLength >= $tmp_CFM_EL_Min and $tmp_CFM_DataLength <= $tmp_CFM_EL_Max) == False){
-							//ExtendedLogging;
-						}
-					}
-				}
+			$tmp_CFM_DataLength = strlen($tmp_CF_Data) ?: $tmp_CFM_DataLength = 0;
+			if($tmp_CFM_Count > 0 and $tmp_CFM_DataLength > 0){
 				for($x = 0; $x < $tmp_CFM_Count; $x++) {
 					$tmp_CFM_tmp = " ";
 					$tmp_CFM_tmpLength = 0;
 					$tmp_CFM_tmp = explode(";", $tmp_CF_Data)[$x] . ";" ?: $tmp_CFM_Return = " ";
-					$tmp_CFM_tmpLength = strlen($tmp_CFM_tmp) ?: $tmp_CFM_tmpLength = 0;
-					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) == false and $tmp_CFM_tmpLength > 4 and $tmp_CFM_tmpLength < 15){
-						$tmp_CFM_AllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789;";
-						for($n = 0; $n < strlen($tmp_CFM_tmp); $n++){
+					$tmp_CFM_tmpLength = strlen($tmp_CFM_tmp) ?: $tmp_CFM_tmpLength = "a";
+					if(!empty($tmp_CFM_tmpLength) and is_string($tmp_CFM_tmpLength) === True and $tmp_CFM_tmpLength === "a"){
+						$tmp_CFM_tmp = " ";
+						$tmp_CFM_tmpLength = 0;
+					}
+					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) == false and $tmp_CFM_tmpLength > 5 and $tmp_CFM_tmpLength <= 15){
+						$tmp_CFM_AllowedChars = $this->AllowedChars.$this->AllowedNums.";";
+						for($n = 0; $n < $tmp_CFM_tmpLength; $n++){
 							if($n > 13 or strlen($tmp_CFM_tmp) < 5){
 								$tmp_CFM_tmp = " ";
 								break;
 							}
 							$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
-							if(strpos($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === false){
+							if(!empty($tmp_CFM_tmpName) and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
+								if((str_contains(";" , $tmp_CFM_tmpName) === True and $n !== ($tmp_CFM_tmpLength - 1)) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n === ($tmp_CFM_tmpLength - 1))){
+									$tmp_CFM_tmp = " ";
+									break;
+								}
+							}else{
 								$tmp_CFM_tmp = " ";
 								break;
 							}
 						}
-						if(is_string($tmp_CFM_Return) === True and strlen($tmp_CFM_tmp) > 4){
-							strlen($tmp_CFM_Return) < 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
+						if(is_string($tmp_CFM_Return) === True and strlen($tmp_CFM_tmp) > 5){
+							strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
 						}
 					}
 				}
 			}
 			// Unset Variables
 			$tmp_CFM_Count = 0;
+			$tmp_CFM_DataLength = 0;
 		}
 		return $tmp_CFM_Return;
 	}
@@ -389,7 +371,8 @@ Class GetU_Class{
 		}
 		if(strlen($tmp_ipaddress) === 64){
 			// ** Create Date Hash
-			$tmp_daymonthyearhour = hash('sha256', date("d:m:Y:G")); // X2
+			$tmp_daymonthyearhour = "cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+			$tmp_daymonthyearhour = hash('sha256', date("d:m:Y:G")) ?: $tmp_daymonthyearhour = "cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; // X2
 			// ** Get Server Date and Time
 			$tmp_serverday = date("j");
 			$tmp_servermonth = date("n");
