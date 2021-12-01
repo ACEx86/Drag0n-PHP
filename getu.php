@@ -159,25 +159,27 @@ Class GetU_Class{
 			$tmp_CFM_Count = substr_count($tmp_CF_Data, ";") ?: $tmp_CFM_Count = 0;
 			$tmp_CFM_DataLength = strlen($tmp_CF_Data) ?: $tmp_CFM_DataLength = 0;
 			if($tmp_CFM_Count > 0 and $tmp_CFM_DataLength > 0){
-				for($x = 0; $x < $tmp_CFM_Count; $x++) {
+				for($x = 0; $x < $tmp_CFM_Count; $x++){
 					$tmp_CFM_tmp = " ";
 					$tmp_CFM_tmpLength = 0;
-					$tmp_CFM_tmp = explode(";", $tmp_CF_Data)[$x] . ";" ?: $tmp_CFM_Return = " ";
+					$tmp_CFM_tmp = explode(";", $tmp_CF_Data)[$x] . ";" ?: $tmp_CFM_tmp = " ";
 					$tmp_CFM_tmpLength = strlen($tmp_CFM_tmp) ?: $tmp_CFM_tmpLength = "a";
-					if(!empty($tmp_CFM_tmpLength) and is_string($tmp_CFM_tmpLength) === True and $tmp_CFM_tmpLength === "a"){
-						$tmp_CFM_tmp = " ";
-						$tmp_CFM_tmpLength = 0;
-					}
-					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) == false and $tmp_CFM_tmpLength > 5 and $tmp_CFM_tmpLength <= 15){
+					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and strpos($tmp_CFM_Return, $tmp_CFM_tmp) == false and is_integer($tmp_CFM_DataLength) === True and $tmp_CFM_tmpLength > 5 and $tmp_CFM_tmpLength <= 15){
 						$tmp_CFM_AllowedChars = $this->AllowedChars.$this->AllowedNums.";";
 						for($n = 0; $n < $tmp_CFM_tmpLength; $n++){
-							if($n > 13 or strlen($tmp_CFM_tmp) < 5){
+							if($n > 14 or strlen($tmp_CFM_tmp) <= 5){
 								$tmp_CFM_tmp = " ";
 								break;
 							}
-							$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
+							$tmp_CFM_tmpName = " ";
+							if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and $n <= strlen($tmp_CFM_tmp) - 1){
+								$tmp_CFM_tmpName = $tmp_CFM_tmp[$n] ?: $tmp_CFM_tmpName = " ";
+							}else{
+								$tmp_CFM_tmp = " ";
+								break;
+							}
 							if(!empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmpName) === True and strlen($tmp_CFM_tmpName) === 1 and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
-								if((str_contains(";" , $tmp_CFM_tmpName) === True and $n !== ($tmp_CFM_tmpLength - 1)) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n === ($tmp_CFM_tmpLength - 1))){
+								if((str_contains(';' , $tmp_CFM_tmpName) === True and $n !== strlen($tmp_CFM_tmp) - 1) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n === strlen($tmp_CFM_tmp) - 1)){
 									$tmp_CFM_tmp = " ";
 									break;
 								}
@@ -186,7 +188,7 @@ Class GetU_Class{
 								break;
 							}
 						}
-						if(is_string($tmp_CFM_Return) === True and strlen($tmp_CFM_tmp) > 5){
+						if(is_string($tmp_CFM_Return) === True and strlen($tmp_CFM_tmp) > 5 and strpos($tmp_CFM_Return, $tmp_CFM_tmp) == false){
 							strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
 						}
 					}
