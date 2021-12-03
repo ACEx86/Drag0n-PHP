@@ -398,7 +398,7 @@ Class GetU_Class{
 						$this->ExtendedLogging_E === False ?: $this->Extended_Logging("AA");
 					}
 					clearstatcache($bansfolder);
-					if(is_writeable($bansfolder) === True){
+					if(file_exists($bansfolder) === False and is_writeable($bansfolder) === True){
 						if(mkdir($bansfolder, 0600) === False and $this->ExtendedLogging_E === True){
 							$this->Extended_Logging("AA");
 						}
@@ -407,7 +407,7 @@ Class GetU_Class{
 					}
 				}
 				clearstatcache($bannedforhourfolder);
-				if(is_writeable($bannedforhourfolder) === True){
+				if(file_exists($bannedforhourfolder) === True and is_writeable($bannedforhourfolder) === True){
 					if(mkdir($bannedforhourfolder, 0600) === False and $this->ExtendedLogging_E === True){
 						$this->Extended_Logging("AA");
 					}
@@ -437,12 +437,9 @@ Class GetU_Class{
 				}
 			}
 			if($tmp_ip_blockedrequests >= 0 and $tmp_ip_blockedrequests < 5){
-				is_string($Get_UserName) === true ? $UserName = urlencode($Get_UserName) : $UserName = ' ';
-				is_string($Get_AccessToken) === true ? $AccessToken = $Get_AccessToken : $AccessToken = ' ';
-				is_string($Get_SACData) === true ? $SACData = urlencode($Get_SACData) : $SACData = 2;
-				// Set allowed chars
-				$tmp_allowedchars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-				$tmp_allowednums = '0123456789';
+				is_string($Get_UserName) === True ? $UserName = urlencode($Get_UserName) : $UserName = ' ';
+				is_string($Get_AccessToken) === True ? $AccessToken = $Get_AccessToken : $AccessToken = ' ';
+				is_string($Get_SACData) === True ? $SACData = urlencode($Get_SACData) : $SACData = 2;
 				// For UserName
 				for($n = 0; $n < strlen($UserName); $n++){
 					if($n > 13 or strlen($UserName) < 5){
@@ -450,11 +447,11 @@ Class GetU_Class{
 						break;
 					}
 					$tmp_Name = ' ';
-					if(!empty($UserName) and is_string($UserName) === True){
-						$tmp_Name = $UserName[$n];
+					if(!empty($UserName) and is_string($UserName) === True and $n <= strlen($UserName) - 1){
+						$tmp_Name = $UserName[$n] ?: $tmp_Name = ' ';
 					}
-					$tmp_Name_allowedchars = $tmp_allowedchars.$tmp_allowednums;
-					if(strpos($tmp_Name_allowedchars, $tmp_Name) === false){
+					$tmp_allowedchars = $this->AllowedChars.$this->$AllowedNums;
+					if(strpos($tmp_allowedchars, $tmp_Name) === false){
 						$UserName = ' ';
 						break;
 					}
@@ -465,19 +462,17 @@ Class GetU_Class{
 						$AccessToken = ' ';
 						break;
 					}
-					$tmp_Token_allowedchars = $tmp_allowedchars.$tmp_allowednums;
+					$tmp_allowedchars = $this->AllowedChars.$this->$AllowedNums;
 					if($n === 64){
-						$tmp_Token_allowedchars = ':';
+						$tmp_allowedchars = ':';
 					}elseif($n > 64){
-						$tmp_Token_allowedchars = $tmp_allowednums;
-					}else{
-						$tmp_Token_allowedchars = $tmp_allowedchars.$tmp_allowednums;
+						$tmp_allowedchars = $tmp_allowednums;
 					}
 					$tmp_AccessToken_Chars = ' ';
-					if(!empty($AccessToken) and is_string($AccessToken) === True){
-						$tmp_AccessToken_Chars = $AccessToken[$n];
+					if(!empty($AccessToken) and is_string($AccessToken) === True and $n <= strlen($AccessToken) - 1){
+						$tmp_AccessToken_Chars = $AccessToken[$n] ?: $tmp_AccessToken_Chars = ' ';
 					}
-					if(strpos($tmp_Token_allowedchars, $tmp_AccessToken_Chars) === false){
+					if(strpos($tmp_allowedchars, $tmp_AccessToken_Chars) === false){
 						$AccessToken = ' ';
 						break;
 					}
@@ -498,7 +493,7 @@ Class GetU_Class{
 					}
 				}
 				//
-				if(is_string($UserName) === true and strpos($UserName, '.') === false and strpos($UserName, '%') === false and strpos($UserName, '/') === false and strpos($UserName, '<') === false and strpos($UserName, '>') === false and strpos($UserName, '$') === false and is_string($AccessToken) === true and strpos($AccessToken, '.') === false and strpos($AccessToken, '%') === false and strpos($AccessToken, '/') === false and strpos($AccessToken, '<') === false and strpos($AccessToken, '>') === false and strpos($AccessToken, '$') === false and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and $SACData > 0){
+				if(is_string($UserName) === True and strpos($UserName, '.') === False and strpos($UserName, '%') === False and strpos($UserName, '/') === False and strpos($UserName, '<') === False and strpos($UserName, '>') === False and strpos($UserName, '$') === False and is_string($AccessToken) === True and strpos($AccessToken, '.') === False and strpos($AccessToken, '%') === False and strpos($AccessToken, '/') === False and strpos($AccessToken, '<') === False and strpos($AccessToken, '>') === False and strpos($AccessToken, '$') === False and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and is_integer($SACData) === True and $SACData > 0){
 					$UserName = strtolower($UserName) ? strtolower($UserName) : ' ';
 					$tmp_AccessToken_GT = explode(':', $AccessToken)[0] ?: $tmp_AccessToken_GT = 0; // Access Token
 					$tmp_AccessToken_AC = explode(':', $AccessToken)[1] ?: $tmp_AccessToken_AC = 0; // File Indicator
