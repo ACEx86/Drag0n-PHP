@@ -360,18 +360,19 @@ Class GetU_Class{
 			$Extended_Logging_data = $ELData;
 		}
 	}
-	Private function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
-		$tmp_ipaddress = '127.0.0.1';
+
+	Private Function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
+		$tmp_ipaddress = ' ';
 		if(!empty($_SERVER) and is_array($_SERVER) === True and in_array('REMOTE_ADDR', $_SERVER) === True){
 			$tmp_ipaddress = $_SERVER['REMOTE_ADDR'] ?: $tmp_ipaddress = ' ';
 		}
 		if(is_string($tmp_ipaddress) === true and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, ".") === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ":") > 2 and substr_count($tmp_ipaddress, ":") < 8))){
-			$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: ' '; // X2
+			$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ' '; // X2
 		}else{
 			$tmp_ipaddress = ' ';
 			unset($Get_UserName, $Get_AccessToken, $Get_SACData);
 		}
-		if(strlen($tmp_ipaddress) === 64){
+		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) === 64){
 			// ** Create Date Hash
 			$tmp_daymonthyearhour = 'cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 			$tmp_daymonthyearhour = hash('sha256', date("d:m:Y:G")) ?: $tmp_daymonthyearhour = 'cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'; // X2
