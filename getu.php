@@ -78,7 +78,7 @@ Class GetU_Class{
 					}else{
 						return False;
 					}
-				}elseif(str_contains($tmp_Path, "../Dbu/") and $tmp_PC_StaticGet === "../Dbu/"){
+				}elseif(str_contains($tmp_Path, "../Dbu/") === True and $tmp_PC_StaticGet === "../Dbu/"){
 					//
 				}else{
 					//
@@ -448,10 +448,10 @@ Class GetU_Class{
 					}
 					$tmp_allowedchars = $this->AllowedChars.$this->AllowedNums ?: $tmp_allowedchars = '';
 					$tmp_Name = ' ';
-					if(!empty($UserName) and is_string($UserName) === True){
+					if(!empty($UserName) and is_string($UserName) === True and $n <= strlen($UserName) - 1){
 						$tmp_Name = $UserName[$n] ?: $tmp_Name = ' ';
 					}
-					if(!empty($tmp_allowedchars) and !empty($tmp_Name) and is_string($tmp_allowedchars) === True and is_string($tmp_Name) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_Name) === 1 and strpos($tmp_allowedchars, $tmp_Name) === False){
+					if(!empty($tmp_allowedchars) and !empty($tmp_Name) and is_string($tmp_allowedchars) === True and is_string($tmp_Name) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_Name) === 1 and str_contains($tmp_allowedchars, $tmp_Name) === False){
 						$UserName = ' ';
 						break;
 					}
@@ -469,10 +469,10 @@ Class GetU_Class{
 						$tmp_allowedchars = $this->AllowedNums ?: $tmp_allowedchars = '';
 					}
 					$tmp_AccessToken_Chars = ' ';
-					if(!empty($AccessToken) and is_string($AccessToken) === True){
+					if(!empty($AccessToken) and is_string($AccessToken) === True and $n <= strlen($AccessToken) - 1){
 						$tmp_AccessToken_Chars = $AccessToken[$n] ?: $tmp_AccessToken_Chars = ' ';
 					}
-					if(!empty($tmp_allowedchars) and !empty($tmp_AccessToken_Chars) and is_string($tmp_AccessToken_Chars) === True and is_string($tmp_allowedchars) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_AccessToken_Chars) === 1 and strpos($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
+					if(!empty($tmp_allowedchars) and !empty($tmp_AccessToken_Chars) and is_string($tmp_AccessToken_Chars) === True and is_string($tmp_allowedchars) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_AccessToken_Chars) === 1 and str_contains($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
 						$AccessToken = ' ';
 						break;
 					}
@@ -485,15 +485,15 @@ Class GetU_Class{
 					}
 					$tmp_SACData_Chars = ' ';
 					if(!empty($SACData) and is_string($SACData) === True){
-						$tmp_SACData_Chars = $SACData[$n];
+						$tmp_SACData_Chars = $SACData[$n] ?: $tmp_SACData_Chars = ' ';
 					}
-					if(strpos($this->AllowedNums, $tmp_SACData_Chars) === false){
+					if(str_contains($this->AllowedNums, $tmp_SACData_Chars) === False){
 						$SACData = 2;
 						break;
 					}
 				}
 				if(is_string($UserName) === True and strpos($UserName, '.') === False and strpos($UserName, '%') === False and strpos($UserName, '/') === False and strpos($UserName, '<') === False and strpos($UserName, '>') === False and strpos($UserName, '$') === False and is_string($AccessToken) === True and strpos($AccessToken, '.') === False and strpos($AccessToken, '%') === False and strpos($AccessToken, '/') === False and strpos($AccessToken, '<') === False and strpos($AccessToken, '>') === False and strpos($AccessToken, '$') === False and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and is_integer($SACData) === True and $SACData > 0){
-					$UserName = strtolower($UserName) ? strtolower($UserName) : ' ';
+					$UserName = strtolower($UserName) ?: $UserName = ' ';
 					$tmp_AccessToken_GT = explode(':', $AccessToken)[0] ?: $tmp_AccessToken_GT = 0; // Access Token
 					$tmp_AccessToken_AC = explode(':', $AccessToken)[1] ?: $tmp_AccessToken_AC = 0; // File Indicator
 					$DoubleHash = hash('sha256', $tmp_AccessToken_GT) ? hash('sha256', $tmp_AccessToken_GT) : $DoubleHash = 'A'; // Double X2
