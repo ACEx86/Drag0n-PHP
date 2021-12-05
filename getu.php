@@ -104,48 +104,20 @@ Class GetU_Class{
 	}
 	// * * *
 	// Writes to files
-	// 0 = Success *|* 1 = Fail at the first one *|* 2 = Success at first failed at second *|* 3 = All failled *|* 4 = Nothing Happened
+	//
 	private function PutConO($aa, $ab, $ag){
-		$los_co = 4;
 		if(strlen($aa) > 28){
-			$tmp_ca = $aa . ".inUse";
-			clearstatcache($tmp_ca);
-			if(file_exists($tmp_ca)){
-				$los_co = 1;
+			if(strlen($ab) === 0){
+				// DELETE DATA
+				file_put_contents($aa, '', LOCK_EX);
 			}else{
-				file_put_contents($tmp_ca, " ", FILE_APPEND|LOCK_EX);
-				if(strlen($ab) === 0){
-					// DELETE DATA
-					file_put_contents($aa, "", LOCK_EX);
-				}else{
-					//APPEND DATA
-					file_put_contents($aa, $ab, FILE_APPEND);
-				}
-				unlink($tmp_ca);
-				$los_co = 0;
+				//APPEND DATA
+				file_put_contents($aa, $ab, FILE_APPEND);
 			}
+			$los_co = 0;
 			clearstatcache($aa);
 		}
-		if(strlen($ag) > 28){
-			$tmp_ca = $ag . ".inUse";
-			clearstatcache($tmp_ca);
-			if(file_exists($tmp_ca)){
-				if($los_co == 0){
-					$los_co = 2;
-				}else{
-					$los_co = 3;
-				}
-			}else{
-				// DELETE DATA
-				file_put_contents($tmp_ca, " ", FILE_APPEND|LOCK_EX);
-				file_put_contents($ag, "", LOCK_EX);
-				unlink($tmp_ca);
-				if($los_co != 0){
-					$los_co = 3;
-				}
-			}
-		}
-		unset($aa, $ab, $ag);
+		unset($aa, $ag);
 		return($los_co);
 	}
 	// * * *
@@ -472,7 +444,7 @@ Class GetU_Class{
 					if(!empty($AccessToken) and is_string($AccessToken) === True and $n <= strlen($AccessToken) - 1){
 						$tmp_AccessToken_Chars = $AccessToken[$n] ?: $tmp_AccessToken_Chars = ' ';
 					}
-					if(!empty($tmp_allowedchars) and !empty($tmp_AccessToken_Chars) and is_string($tmp_AccessToken_Chars) === True and is_string($tmp_allowedchars) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_AccessToken_Chars) === 1 and str_contains($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
+					if(!empty($tmp_allowedchars) and !empty($tmp_AccessToken_Chars) and is_string($tmp_allowedchars) === True and is_string($tmp_AccessToken_Chars) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_AccessToken_Chars) === 1 and str_contains($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
 						$AccessToken = ' ';
 						break;
 					}
@@ -492,7 +464,7 @@ Class GetU_Class{
 						break;
 					}
 				}
-				if(is_string($UserName) === True and strpos($UserName, '.') === False and strpos($UserName, '%') === False and strpos($UserName, '/') === False and strpos($UserName, '<') === False and strpos($UserName, '>') === False and strpos($UserName, '$') === False and is_string($AccessToken) === True and strpos($AccessToken, '.') === False and strpos($AccessToken, '%') === False and strpos($AccessToken, '/') === False and strpos($AccessToken, '<') === False and strpos($AccessToken, '>') === False and strpos($AccessToken, '$') === False and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and is_integer($SACData) === True and $SACData > 0){
+				if(is_string($UserName) === True and strpos($UserName, '.') === False and strpos($UserName, '%') === False and strpos($UserName, '/') === False and strpos($UserName, '<') === False and strpos($UserName, '>') === False and strpos($UserName, '$') === False and is_string($AccessToken) === True and strpos($AccessToken, '.') === False and strpos($AccessToken, '%') === False and strpos($AccessToken, '/') === False and strpos($AccessToken, '<') === False and strpos($AccessToken, '>') === False and strpos($AccessToken, '$') === False and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and $SACData > 0){
 					$UserName = strtolower($UserName) ?: $UserName = ' ';
 					$tmp_AccessToken_GT = explode(':', $AccessToken)[0] ?: $tmp_AccessToken_GT = 0; // Access Token
 					$tmp_AccessToken_AC = explode(':', $AccessToken)[1] ?: $tmp_AccessToken_AC = 0; // File Indicator
@@ -549,14 +521,12 @@ Class GetU_Class{
 							$UserTMess = '../Dbu/'.$UserName.'/Messages/Users.n.data';
 							clearstatcache($UserPMess);
 							clearstatcache($UserTMess);
-							if(strlen($UserPMess) > 31 and strlen($UserPMess) < 42 and strlen($UserTMess) > 31 and strlen($UserTMess) < 42 and ((file_exists($UserPMess) === true and file_exists($UserTMess) === true) or (file_exists($UserPMess) === true or file_exists($UserTMess) === true))){
+							if(strlen($UserPMess) > 31 and strlen($UserPMess) < 42 and strlen($UserTMess) > 31 and strlen($UserTMess) < 42 and ((file_exists($UserPMess) === True and file_exists($UserTMess) === True) or (file_exists($UserPMess) === True or file_exists($UserTMess) === True))){
+								// Check for new data
 								clearstatcache($UserTMess);
 								if(file_exists($UserTMess)){
-									// Get new UserName data
-									$GUserTData = file_get_contents($UserTMess) ? file_get_contents($UserTMess) : '';
-									// Check new data length
-									if(strlen($GUserTData) > 5){
-										// Count UserName split total users
+									$GUserTData = file_get_contents($UserTMess) ?: $GUserTData = '';
+									if(!empty($GUserTData) and is_string($GUserTData) === True and strlen($GUserTData) > 5){
 										$tmpmsgcount = substr_count($GUserTData, ';') ?: $tmpmsgcount = 0;
 										if($tmpmsgcount < 1){
 											$GUserTData = '';
@@ -565,31 +535,31 @@ Class GetU_Class{
 										$GUserTData = '';
 									}
 								}else{
-									$GUserTData = "";
+									$GUserTData = '';
 								}
+								// Check for old data
 								clearstatcache($UserPMess);
 								if(file_exists($UserPMess)){
-									// Get user data from PMess file
-									$GUserPData = file_get_contents($UserPMess) ? file_get_contents($UserPMess) : $GUserPData = "";
-									if(strlen($GUserPData) > 5){
-										$tmpmsgcount = substr_count($GUserPData, ";") ? substr_count($GUserPData, ";") : $tmpmsgcount = 0;
+									$GUserPData = file_get_contents($UserPMess) ?: $GUserPData = "";
+									if(!empty($GUserPData) and is_string($GUserPData) === True and strlen($GUserPData) > 5){
+										$tmpmsgcount = substr_count($GUserPData, ";") ?: $tmpmsgcount = 0;
 										if($tmpmsgcount < 1){
-											$GUserPData = "";
+											$GUserPData = '';
 										}
 									}else{
-										$GUserPData = "";
+										$GUserPData = '';
 									}
 								}else{
-									$GUserPData = "";
+									$GUserPData = '';
 								}
-								// *** // ** ! * ! ** // *** // --- Data --- // *** // ** ! * ! ** // *** //
-								$GUserCData = " ";
+								// *** // --- Data --- // *** //
+								$GUserCData = ' ';
 								if(strlen($GUserPData) > 5){
 									$GUserCData = CFMess($GUserPData, $GUserTData);
 									if($SACData === 1){
-										$tmp_put = PutConO($UserPMess, "", $UserTMess);
+										$tmp_put = PutConO($UserPMess, '', $UserTMess);
 										while($tmp_put != 0 or $tmp_put != 4){
-											$tmp_put = PutConO($UserPMess, "", $UserTMess);
+											$tmp_put = PutConO($UserPMess, '', $UserTMess);
 										}
 									}else{
 										$tmp_put = PutConO($UserPMess, $GUserCData, $UserTMess);
@@ -599,11 +569,11 @@ Class GetU_Class{
 									}
 								}
 								if(strlen($GUserTData) > 5){
-									$GUserCData = CFMess($GUserTData, "");
+									$GUserCData = CFMess($GUserTData, '');
 									if($SACData === 1){
-										$tmp_put = PutConO($UserTMess, "", $UserPMess);
+										$tmp_put = PutConO($UserTMess, '', $UserPMess);
 										while($tmp_put != 0 or $tmp_put != 4){
-											$tmp_put = PutConO($UserTMess, "", $UserPMess);
+											$tmp_put = PutConO($UserTMess, '', $UserPMess);
 										}
 									}else{
 										$tmp_put = PutConO($UserPMess, $GUserCData, $UserTMess);
