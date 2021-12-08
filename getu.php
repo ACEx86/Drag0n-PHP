@@ -499,11 +499,11 @@ Class GetU_Class{
 							file_put_contents($tmp_checkaccess, ' '); // Set .inUse file
 							$tmp_CorAccCheck = file_get_contents($UserData) ?: ' ';
 							if(strlen($tmp_CorAccCheck) === 64 and $tmp_CorAccCheck === $tmp_ipaddress and hash_equals($tmp_CorAccCheck, $tmp_ipaddress) === True){
-								// Remember: Inside here we get the new and old user names that contacted the client.
+								// Inside here we get the new and old user names that contacted the client.
 								// We send only the new data if the client don't ask for all data.
 								// Each time we wipe new data file and put them in old data
-								// We want to CFMess Both Files data if exist clear the new file and put everything in old file
-								// unless the client specifies we should delete all data after each read. 
+								// We want to CFMess all the data we get, clear the new data file and put everything in old file
+								// unless the client specifies that we should delete all data after each read. 
 								$UsersOldFile = '../Dbu/'.$UserName.'/Messages/Users.data';
 								$UsersNewFile = '../Dbu/'.$UserName.'/Messages/Users.n.data';
 								clearstatcache($UsersOldFile);
