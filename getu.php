@@ -24,9 +24,9 @@ $Get_UserName = null; // Username
 $Get_AccessToken = null; // AccessToken
 $Get_SACData = 2; // Data Actions
 if(!empty($_GET) and is_array($_GET) === True){
-	in_array('n', $_GET) === True ? $Get_UserName = $_GET['n'] : $Get_UserName = null;
-	in_array('p', $_GET) === True ? $Get_AccessToken = $_GET['p'] : $Get_AccessToken = null;
-	in_array('i', $_GET) === True ? $Get_SACData = $_GET['i'] : $Get_SACData = 2;
+	!empty($_GET['n']) ? $Get_UserName = $_GET['n'] : $Get_UserName = null;
+	!empty($_GET['p'])  ? $Get_AccessToken = $_GET['p'] : $Get_AccessToken = null;
+	!empty($_GET['i'])  ? $Get_SACData = $_GET['i'] : $Get_SACData = 2;
 }
 unset($_GET);
 $GetU = new GetU_Class($Get_UserName, $Get_AccessToken, $Get_SACData);
@@ -333,7 +333,6 @@ Class GetU_Class{
 			$tmp_ipaddress = '';
 			unset($Get_UserName, $Get_AccessToken, $Get_SACData);
 		}
-		echo $tmp_ipaddress;
 		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) === 64){
 			// ** Create Date Hash
 			$tmp_daymonthyearhour = 'cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
