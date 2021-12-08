@@ -25,8 +25,8 @@ $Get_AccessToken = null; // AccessToken
 $Get_SACData = 2; // Data Actions
 if(!empty($_GET) and is_array($_GET) === True){
 	!empty($_GET['n']) ? $Get_UserName = $_GET['n'] : $Get_UserName = null;
-	!empty($_GET['p'])  ? $Get_AccessToken = $_GET['p'] : $Get_AccessToken = null;
-	!empty($_GET['i'])  ? $Get_SACData = $_GET['i'] : $Get_SACData = 2;
+	!empty($_GET['p']) ? $Get_AccessToken = $_GET['p'] : $Get_AccessToken = null;
+	!empty($_GET['i']) ? $Get_SACData = $_GET['i'] : $Get_SACData = 2;
 }
 unset($_GET);
 $GetU = new GetU_Class($Get_UserName, $Get_AccessToken, $Get_SACData);
