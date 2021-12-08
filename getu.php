@@ -316,8 +316,16 @@ Class GetU_Class{
 	// /*/ Code /*/ //
 	Private Function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
 		$tmp_ipaddress = '';
-		if(!empty($_SERVER) and is_array($_SERVER) === True and in_array('REMOTE_ADDR', $_SERVER) === True){
-			$tmp_ipaddress = $_SERVER['REMOTE_ADDR'] ?: $tmp_ipaddress = ' ';
+		if(!empty($_SERVER) and is_array($_SERVER) === True){
+			if(!empty($_SERVER['REMOTE_ADDR'])){
+				$tmp_ipaddress = $_SERVER['REMOTE_ADDR'] ?: $tmp_ipaddress = ' ';
+			}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+				$tmp_ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'] ?: $tmp_ipaddress = ' ';
+			}elseif(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+				$tmp_ipaddress = $_SERVER['HTTP_CLIENT_IP'] ?: $tmp_ipaddress = ' ';
+			}else{
+				$tmp_ipaddress = ' ';
+			}
 		}
 		if(is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, '.') === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ':') > 2 and substr_count($tmp_ipaddress, ':') < 8))){
 			$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ' '; // X2
@@ -325,6 +333,7 @@ Class GetU_Class{
 			$tmp_ipaddress = '';
 			unset($Get_UserName, $Get_AccessToken, $Get_SACData);
 		}
+		echo $tmp_ipaddress;
 		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) === 64){
 			// ** Create Date Hash
 			$tmp_daymonthyearhour = 'cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
