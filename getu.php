@@ -38,7 +38,7 @@ Class GetU_Class{
 	Private Bool $ExtendedLogging_E = True;
 	Private String $AllowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 	Private String $AllowedNums = '0123456789';
-	Private String $ipaddress = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+	Private String $IpAddress = '';
 	// - Start Functions
 	// * * *
 	// Path Checker : Validation of path
@@ -213,7 +213,7 @@ Class GetU_Class{
 	}
 	// * * *
 	// Get Ip Address
-	//
+	// ~ Updating
 	Private Function Get_IpAddress(){
 		$tmp_ipaddress = '';
 		if(!empty($_SERVER) and is_array($_SERVER) === True){
@@ -244,7 +244,7 @@ Class GetU_Class{
 				if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and $i <= strlen($tmp_ipaddress) - 1){
 					$tmp_IP = $tmp_ipaddress[$i] ?: $tmp_IP = ' ';
 				}
-				if(!empty($tmp_allowedchars) and !empty($tmp_IP) and is_string($tmp_allowedchars) === True and is_string($tmp_IP) === True and strlen($tmp_allowedchars) > 1 and strlen($tmp_IP) === 1 and str_contains($tmp_allowedchars, $tmp_IP) === False){
+				if(!empty($tmp_allowedchars) and !empty($tmp_IP) and is_string($tmp_allowedchars) === True and is_string($tmp_IP) === True and strlen($tmp_allowedchars) <= 1 and strlen($tmp_IP) < 1 and strlen($tmp_IP) > 1 and str_contains($tmp_allowedchars, $tmp_IP) === False){
 					$tmp_ipaddress = '';
 					break;
 				}
@@ -316,6 +316,7 @@ Class GetU_Class{
 	}
 	// * * *
 	// Server Response And Data
+	//
 	private function SResponse($SData){
 		is_string($SData) === True ?: $SData = 'Packet!';
 		$OneZeroTwoFour = 1024;
@@ -345,6 +346,7 @@ Class GetU_Class{
 	}
 	// * * *
 	// Extended Logging
+	//
 	private function Extended_Logging($ELData){
 		$Extended_Logging_folder = '../Dba/Logs';
 		clearstatcache($Extended_Logging_folder);
@@ -362,8 +364,7 @@ Class GetU_Class{
 	// /*/ Code /*/ //
 	Private Function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
 		$tmp_ipaddress = $this->Get_IpAddress ?: $tmp_ipaddress = '';
-		if(is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, '.') === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ':') > 2 and substr_count($tmp_ipaddress, ':') < 8))){
-			$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ' '; // X2
+		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True){
 		}else{
 			$tmp_ipaddress = '';
 			$Get_UserName = '';
@@ -449,7 +450,7 @@ Class GetU_Class{
 					if(!empty($UserName) and is_string($UserName) === True and $n <= strlen($UserName) - 1){
 						$tmp_Name = $UserName[$n] ?: $tmp_Name = ' ';
 					}
-					if(!empty($tmp_allowedchars) and !empty($tmp_Name) and is_string($tmp_allowedchars) === True and is_string($tmp_Name) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_Name) === 1 and str_contains($tmp_allowedchars, $tmp_Name) === False){
+					if(!empty($tmp_allowedchars) and !empty($tmp_Name) and is_string($tmp_allowedchars) === True and is_string($tmp_Name) === True and strlen($tmp_allowedchars) <= 1 and strlen($tmp_Name) < 1 and strlen($tmp_Name) > 1 and str_contains($tmp_allowedchars, $tmp_Name) === False){
 						$UserName = ' ';
 						break;
 					}
@@ -470,7 +471,7 @@ Class GetU_Class{
 					if(!empty($AccessToken) and is_string($AccessToken) === True and $n <= strlen($AccessToken) - 1){
 						$tmp_AccessToken_Chars = $AccessToken[$n] ?: $tmp_AccessToken_Chars = ' ';
 					}
-					if(!empty($tmp_allowedchars) and !empty($tmp_AccessToken_Chars) and is_string($tmp_allowedchars) === True and is_string($tmp_AccessToken_Chars) === True and strlen($tmp_allowedchars) === 1 and strlen($tmp_AccessToken_Chars) === 1 and str_contains($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
+					if(!empty($tmp_allowedchars) and !empty($tmp_AccessToken_Chars) and is_string($tmp_allowedchars) === True and is_string($tmp_AccessToken_Chars) === True and strlen($tmp_allowedchars) <= 1 and strlen($tmp_AccessToken_Chars) < 1 and strlen($tmp_AccessToken_Chars) > 1 and str_contains($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
 						$AccessToken = ' ';
 						break;
 					}
