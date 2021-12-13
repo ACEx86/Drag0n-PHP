@@ -38,6 +38,7 @@ Class GetU_Class{
 	Private Bool $ExtendedLogging_E = True;
 	Private String $AllowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 	Private String $AllowedNums = '0123456789';
+	Private String $ipaddress = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 	// - Start Functions
 	// * * *
 	// Path Checker : Validation of path
@@ -132,7 +133,7 @@ Class GetU_Class{
 								$tmp_CFM_tmp = ' ';
 								break;
 							}
-							if(!empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmpName) === True and strlen($tmp_CFM_tmpName) === 1 and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
+							if(!empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmpName) === True and strlen($tmp_CFM_tmpName) === 1 and !empty($tmp_CFM_AllowedChars) and is_string($tmp_CFM_AllowedChars) === True and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
 								if((str_contains(';' , $tmp_CFM_tmpName) === True and $n !== strlen($tmp_CFM_tmp) - 1) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n === strlen($tmp_CFM_tmp) - 1)){
 									$tmp_CFM_tmp = ' ';
 									break;
@@ -142,8 +143,18 @@ Class GetU_Class{
 								break;
 							}
 						}
-						if(is_string($tmp_CFM_Return) === True and strlen($tmp_CFM_tmp) > 5 and strpos($tmp_CFM_Return, $tmp_CFM_tmp) == false){
-							strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
+						if(is_string($tmp_CFM_Return) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) === False){
+							$tmp_add_name = '';
+							if($tmp_add_name = explode(';', $tmp_CF_Data)[$x]){
+								// Do nothing.
+							}else{
+								$tmp_add_name = '';
+								$For_Extended_Ip = $this->tmp_ipaddress ?: $For_Extended_Ip = 'Unkown';
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('CFMess: Failled to validate on insert data. With IP Address: '.$For_Extended_Ip);
+							}
+                            if(is_string($tmp_CFM_tmp) === True and $tmp_add_name === $tmp_CFM_tmp){
+                                strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
+                            }
 						}
 					}
 				}
@@ -188,28 +199,63 @@ Class GetU_Class{
 		}
 		return True;
 	}
-	private function FixDate($ptmp_daymonthyearhour){
+	private function GetDate($ptmp_daymonthyearhour){
 		if(is_string($ptmp_daymonthyearhour) === false or strlen($ptmp_daymonthyearhour) != 64){
 			$ptmp_daymonthyearhour = ' ';
 			$ptmp_daymonthyearhour = hash('sha256', date("d:m:Y:G")); // X2
 		}
 		return $ptmp_daymonthyearhour;
 	}
-	private function FixTime($ptmptime){
+	private function GetTime($ptmptime){
 		is_string($ptmptime) === false ?: 1;
 		$ptmptime >= 0 ? $ptmptime += 1 : $ptmptime = 1;
 		return $ptmptime;
 	}
-	private function FixIP($ptmp_ipaddress){
-		if(is_string($ptmp_ipaddress) === false or strlen($ptmp_daymonthyearhour) != 64){
-			$ptmp_ipaddress = $_SERVER["REMOTE_ADDR"] ?: " ";
-			if(is_string($ptmp_ipaddress) === true and strlen($ptmp_ipaddress) > 6 and ((strlen($ptmp_ipaddress) < 16 and substr_count($ptmp_ipaddress, ".") === 3) or (strlen($ptmp_ipaddress) < 40 and substr_count($ptmp_ipaddress, ":") > 2 and substr_count($ptmp_ipaddress, ":") < 8))){
-				$ptmp_ipaddress = hash('sha256', $ptmp_ipaddress) ?: ' '; // X2
-			}else{
-				$ptmp_ipaddress = ' ';
+	// * * *
+	// Get Ip Address
+	//
+	Private Function Get_IpAddress(){
+		$tmp_ipaddress = '';
+		if(!empty($_SERVER) and is_array($_SERVER) === True){
+			if(!empty($_SERVER['REMOTE_ADDR']) and empty($_SERVER['HTTP_X_FORWARDED_FOR']) and empty($_SERVER['HTTP_CLIENT_IP'])){
+				$tmp_ipaddress_check = $_SERVER['REMOTE_ADDR'] ?: $tmp_ipaddress_check = '';
+				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) >= strlen($tmp_ipaddress)){
+					$tmp_ipaddress = $tmp_ipaddress_check ?: $tmp_ipaddress = '';
+				}
+			}
+			if(!empty($_SERVER['HTTP_X_FORWARDED_FOR']) and empty($_SERVER['REMOTE_ADDR']) and empty($_SERVER['HTTP_CLIENT_IP'])) {
+				$tmp_ipaddress_check = $_SERVER['HTTP_X_FORWARDED_FOR'] ?: $tmp_ipaddress = '';
+				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) >= strlen($tmp_ipaddress)){
+					$tmp_ipaddress = $tmp_ipaddress_check ?: $tmp_ipaddress = '';
+				}
+			}
+			if(!empty($_SERVER['HTTP_CLIENT_IP']) and empty($_SERVER['HTTP_X_FORWARDED_FOR']) and empty($_SERVER['HTTP_CLIENT_IP'])) {
+				$tmp_ipaddress_check = $_SERVER['HTTP_CLIENT_IP'] ?: $tmp_ipaddress = '';
+				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) >= strlen($tmp_ipaddress)){
+					$tmp_ipaddress = $tmp_ipaddress_check ?: $tmp_ipaddress = '';
+				}
 			}
 		}
-		return $ptmp_ipaddress;
+		if(is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, '.') === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ':') > 2 and substr_count($tmp_ipaddress, ':') < 8))){
+			// For Ip Address
+			for($i = 0; $i < strlen($tmp_ipaddress); $i++){
+				$tmp_allowedchars = $this->AllowedNums.'.' ?: $tmp_allowedchars = '';
+				$tmp_IP = '';
+				if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and $i <= strlen($tmp_ipaddress) - 1){
+					$tmp_IP = $tmp_ipaddress[$i] ?: $tmp_IP = ' ';
+				}
+				if(!empty($tmp_allowedchars) and !empty($tmp_IP) and is_string($tmp_allowedchars) === True and is_string($tmp_IP) === True and strlen($tmp_allowedchars) > 1 and strlen($tmp_IP) === 1 and str_contains($tmp_allowedchars, $tmp_IP) === False){
+					$tmp_ipaddress = '';
+					break;
+				}
+			}
+			if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) > 1){
+				$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ' '; // X2
+			}
+		}else{
+			$tmp_ipaddress = '';
+		}
+		return $tmp_ipaddress;
 	}
 	// * * *
 	// Blocked Packets
@@ -315,23 +361,14 @@ Class GetU_Class{
 	}
 	// /*/ Code /*/ //
 	Private Function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
-		$tmp_ipaddress = '';
-		if(!empty($_SERVER) and is_array($_SERVER) === True){
-			if(!empty($_SERVER['REMOTE_ADDR'])){
-				$tmp_ipaddress = $_SERVER['REMOTE_ADDR'] ?: $tmp_ipaddress = ' ';
-			}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-				$tmp_ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'] ?: $tmp_ipaddress = ' ';
-			}elseif(!empty($_SERVER['HTTP_CLIENT_IP'])) {
-				$tmp_ipaddress = $_SERVER['HTTP_CLIENT_IP'] ?: $tmp_ipaddress = ' ';
-			}else{
-				$tmp_ipaddress = ' ';
-			}
-		}
+		$tmp_ipaddress = $this->Get_IpAddress ?: $tmp_ipaddress = '';
 		if(is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, '.') === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ':') > 2 and substr_count($tmp_ipaddress, ':') < 8))){
 			$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ' '; // X2
 		}else{
 			$tmp_ipaddress = '';
-			unset($Get_UserName, $Get_AccessToken, $Get_SACData);
+			$Get_UserName = '';
+			$Get_AccessToken = '';
+			$Get_SACData = '';
 		}
 		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) === 64){
 			// ** Create Date Hash
