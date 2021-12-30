@@ -72,10 +72,12 @@ Class GetU_Class{
 				for($x = 0; $x < $tmp_CFM_Count; $x++){
 					$tmp_CFM_tmp = ' ';
 					$tmp_CFM_tmpLength = 0;
-					$tmp_CFM_tmp = explode(';', $tmp_CF_Data)[$x] . ';' ?: $tmp_CFM_tmp = ' ';
+					$tmp_CFM_tmpExact = ' ';
+					$tmp_CFM_tmp = explode(';', $tmp_CF_Data)[$x].';' ?: $tmp_CFM_tmp = ' ';
 					$tmp_CFM_tmpLength = strlen($tmp_CFM_tmp) ?: $tmp_CFM_tmpLength = 'a';
-					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and strpos($tmp_CFM_Return, $tmp_CFM_tmp) == False and is_integer($tmp_CFM_DataLength) === True and $tmp_CFM_tmpLength > 5 and $tmp_CFM_tmpLength <= 15){
-						$tmp_CFM_AllowedChars = $this->AllowedChars.$this->AllowedNums.';';
+					$tmp_CFM_tmpExact = ';'.$tmp_CFM_tmp ?: $tmp_CFM_tmpExact = ' ';
+					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and !empty($tmp_CFM_tmpExact) and is_string($tmp_CFM_tmpExact) === True and !empty($tmp_CFM_tmpLength) and is_integer($tmp_CFM_tmpLength) === True and $tmp_CFM_tmpLength > 5 and $tmp_CFM_tmpLength <= 15 and !empty($tmp_CFM_Return) and is_string($tmp_CFM_Return) === True and substr_count($tmp_CFM_tmp, ';') === 1 and (substr_count($tmp_CFM_Return, ';') < 1 or str_contains($tmp_CFM_Return, $tmp_CFM_tmpExact) === False)){
+						$tmp_CFM_AllowedChars = $this->AllowedChars.$this->AllowedNums.';' ?: $tmp_CFM_AllowedChars = '';
 						for($n = 0; $n < $tmp_CFM_tmpLength; $n++){
 							if($n > 14 or strlen($tmp_CFM_tmp) <= 5){
 								$tmp_CFM_tmp = ' ';
@@ -83,26 +85,31 @@ Class GetU_Class{
 							}
 							$tmp_CFM_tmpName = ' ';
 							if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and $n <= strlen($tmp_CFM_tmp) - 1){
-								$tmp_CFM_tmpName = $tmp_CFM_tmp[$n] ?: $tmp_CFM_tmpName = ' ';
+								$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
 							}else{
 								$tmp_CFM_tmp = ' ';
 								break;
 							}
-							if(!empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmpName) === True and strlen($tmp_CFM_tmpName) === 1 and !empty($tmp_CFM_AllowedChars) and is_string($tmp_CFM_AllowedChars) === True and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
-								if((str_contains(';' , $tmp_CFM_tmpName) === True and $n !== strlen($tmp_CFM_tmp) - 1) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n === strlen($tmp_CFM_tmp) - 1)){
+							if(isset($tmp_CFM_tmpName) === True and is_string($tmp_CFM_tmpName) === True and strlen($tmp_CFM_tmpName) === 1 and isset($tmp_CFM_AllowedChars) === True and is_string($tmp_CFM_AllowedChars) === True and strlen($tmp_CFM_AllowedChars) === 63 and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
+								if(!empty($tmp_CFM_tmpLength) and !empty($tmp_CFM_tmp) and !empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmp) === False and is_integer($tmp_CFM_tmpLength) === False and (str_contains(';' , $tmp_CFM_tmpName) === True and $n != strlen($tmp_CFM_tmp) - 1 or $n != $tmp_CFM_tmpLength) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n == strlen($tmp_CFM_tmp) - 1 or $n == $tmp_CFM_tmpLength)){
 									$tmp_CFM_tmp = ' ';
 									break;
+								}else{
+									if(isset($tmp_CFM_tmpLength) === False or isset($tmp_CFM_tmp) === False or isset($tmp_CFM_tmpName) === False or (isset($tmp_CFM_tmpLength) and is_integer($tmp_CFM_tmpLength) === False) or (isset($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === False)){
+										$tmp_CFM_tmp = ' ';
+										break;
+									}
 								}
 							}else{
 								$tmp_CFM_tmp = ' ';
 								break;
 							}
+							$tmp_CFM_tmpName = ' ';
 						}
-						if(is_string($tmp_CFM_Return) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) === False){
+						if(!empty($tmp_CFM_Return) and is_string($tmp_CFM_Return) === True and !empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) === False){
 							$tmp_add_name = '';
-							if($tmp_add_name = explode(';', $tmp_CF_Data)[$x]){
-								// Do nothing.
-							}else{
+							$tmp_add_name = explode(';', $tmp_CF_Data)[$x] . ';' ?: $tmp_add_name = '';
+							if(empty($tmp_add_name)){
 								$tmp_add_name = '';
 								$For_Extended_Ip = $this->tmp_ipaddress ?: $For_Extended_Ip = 'Unkown';
 								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('CFMess: Failled to validate on insert data. With IP Address: '.$For_Extended_Ip);
@@ -110,13 +117,17 @@ Class GetU_Class{
 							if(is_string($tmp_CFM_tmp) === True and $tmp_add_name === $tmp_CFM_tmp){
 								strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
 							}
+							$tmp_add_name = '';
 						}
 					}
+					$tmp_CFM_tmp = ' ';
+					$tmp_CFM_tmpLength = 0;
+					$tmp_CFM_tmpExact = ' ';
 				}
 			}
-			// Unset Variables
 			$tmp_CFM_Count = 0;
 			$tmp_CFM_DataLength = 0;
+			$tmp_CF_Data = '';
 		}
 		return $tmp_CFM_Return;
 	}
@@ -688,7 +699,7 @@ Class GetU_Class{
 						}
 					}else{
 						clearstatcache();
-						if(strlen($tmp_AccessToken_AC) === 1 and (int)$tmp_AccessToken_AC === 3 and is_string($tmp_one_nc) === true and is_string($tmp_two_nc) === true and strlen($tmp_one_nc) > 4 and strlen($tmp_two_nc) > 4 and strlen($tmp_one_nc) < 15 and strlen($tmp_two_nc) < 15 and strlen($tmp_one_nc) === strlen($UserName) and $tmp_one_nc === $UserName and strlen($tmp_two_nc) === strlen($UserName) and $tmp_two_nc === $UserName and $tmp_one_nc === $tmp_two_nc and is_string($tmp_one_ip) === true and is_string($tmp_two_ip) === true and is_string($tmp_ipaddress) === true and strlen($tmp_one_ip) === 64 and strlen($tmp_two_ip) === 64 and $tmp_one_ip != $tmp_ipaddress and $tmp_one_ip != $tmp_two_ip and $tmp_two_ip === $tmp_ipaddress and is_string($UserData) === true and is_string($tmp_ipfile) === true and strlen($tmp_UDone) === 7 and $tmp_UDone == '../Dbu/' and is_string($tmp_UDtwo) === true and strlen($tmp_UDtwo) === 1 and $tmp_UDtwo == '/' and strlen($tmp_UDthree) === 5 and $tmp_UDthree === '.mdma' and strlen($tmp_IPone) === 7 and $tmp_IPone == '../Dbu/' and is_string($tmp_IPtwo) === true and strlen($tmp_IPtwo) === 1 and $tmp_IPtwo === '/' and strlen($tmp_IPthree) === 5 and $tmp_IPthree === '.mdma' and $tmp_UDthree === $tmp_IPthree and strlen($tmp_UD_atlengthone) === 69 and strlen($tmp_IP_iplengthone) === 69 and substr_count($UserData, '.') === 3 and substr_count($tmp_ipfile, '.') === 3 and substr_count($UserData, '/') === 3 and substr_count($tmp_ipfile, '/') === 3 and $tmp_UD_atlengthtwo === strlen($UserData) and $tmp_IP_iplengthtwo === strlen($tmp_ipfile) and $tmp_UD_atlengthtwo === $tmp_IP_iplengthtwo and strlen($UserData) > 81 and strlen($UserData) < 92 and strlen($tmp_ipfile) > 81 and strlen($tmp_ipfile) < 92 and $tmp_AccessToken_GT != $DoubleHash and hash_equals($tmp_AccessToken_GT, $DoubleHash) === False and strlen($UserData) === strlen($tmp_ipfile) and $UserData != $tmp_ipfile and hash_equals($DoubleHash, $tmp_ipaddress) === false and file_exists($UserData) === true and file_exists($tmp_ipfile) === true and file_exists($tmp_checkaccess) === true){
+						if(isset($tmp_AccessToken_AC) === True and is_string($tmp_AccessToken_AC) === True and strlen($tmp_AccessToken_AC) === 1 and (int)$tmp_AccessToken_AC === 3 and isset($tmp_one_nc) === True and is_string($tmp_one_nc) === True and isset($tmp_two_nc) === True and is_string($tmp_two_nc) === True and strlen($tmp_one_nc) > 4 and strlen($tmp_two_nc) > 4 and strlen($tmp_one_nc) < 15 and strlen($tmp_two_nc) < 15 and isset($UserName) === True and is_string($UserName) === True and strlen($tmp_one_nc) === strlen($UserName) and $tmp_one_nc === $UserName and strlen($tmp_two_nc) === strlen($UserName) and $tmp_two_nc === $UserName and $tmp_one_nc === $tmp_two_nc and isset($tmp_one_ip) === True and is_string($tmp_one_ip) === True and isset($tmp_two_ip) === True and is_string($tmp_two_ip) === True and isset($tmp_ipaddress) === True and is_string($tmp_ipaddress) === True and strlen($tmp_one_ip) === 64 and strlen($tmp_two_ip) === 64 and $tmp_one_ip != $tmp_ipaddress and $tmp_one_ip != $tmp_two_ip and $tmp_two_ip === $tmp_ipaddress and isset($UserData) === True and is_string($UserData) === True and isset($tmp_ipfile) === True and is_string($tmp_ipfile) === True and isset($tmp_UDone) === True and strlen($tmp_UDone) === 7 and $tmp_UDone === '../Dbu/' and isset($tmp_UDtwo) === True and is_string($tmp_UDtwo) === True and strlen($tmp_UDtwo) === 1 and $tmp_UDtwo === '/' and isset($tmp_UDthree) === True and strlen($tmp_UDthree) === 5 and $tmp_UDthree === '.mdma' and isset($tmp_IPone) === True and is_string($tmp_IPone) === True and strlen($tmp_IPone) === 7 and $tmp_IPone === '../Dbu/' and isset($tmp_IPtwo) === True and is_string($tmp_IPtwo) === True and strlen($tmp_IPtwo) === 1 and $tmp_IPtwo === '/' and isset($tmp_IPthree) === True and is_string($tmp_IPthree) === True and strlen($tmp_IPthree) === 5 and $tmp_IPthree === '.mdma' and $tmp_UDthree === $tmp_IPthree and isset($tmp_UD_atlengthone) === True and is_string($tmp_UD_atlengthone) === True and strlen($tmp_UD_atlengthone) === 69 and isset($tmp_IP_iplengthone) === True and is_string($tmp_IP_iplengthone) === True and strlen($tmp_IP_iplengthone) === 69 and substr_count($UserData, '.') === 3 and substr_count($tmp_ipfile, '.') === 3 and substr_count($UserData, '/') === 3 and substr_count($tmp_ipfile, '/') === 3 and isset($tmp_UD_atlengthtwo) === True and is_integer($tmp_UD_atlengthtwo) === True and $tmp_UD_atlengthtwo === strlen($UserData) and isset($tmp_IP_iplengthtwo) === True and is_integer($tmp_IP_iplengthtwo) === True and $tmp_IP_iplengthtwo === strlen($tmp_ipfile) and $tmp_UD_atlengthtwo === $tmp_IP_iplengthtwo and strlen($UserData) > 81 and strlen($UserData) < 92 and strlen($tmp_ipfile) > 81 and strlen($tmp_ipfile) < 92 and $tmp_AccessToken_GT != $DoubleHash and hash_equals($tmp_AccessToken_GT, $DoubleHash) === False and strlen($UserData) === strlen($tmp_ipfile) and $UserData != $tmp_ipfile and $DoubleHash != $tmp_ipfile and hash_equals($DoubleHash, $tmp_ipaddress) === False and file_exists($UserData) === True and file_exists($tmp_ipfile) === True and file_exists($tmp_checkaccess) === True){
 							$this->SResponse('Packet!');
 						}else{
 							$this->BPacket('Packet!', $tmp_daymonthyearhour, $tmp_ip_blockedrequests, $tmp_ipaddress);
