@@ -36,6 +36,7 @@ Class GetU_Class{
 	Private Bool $IsFunctionInUse = False;
 	Private Bool $IsBPacketUsed = False;
 	Private Bool $ExtendedLogging_E = True;
+	Private Bool $ProfileLogging_E = True;
 	Private String $AllowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 	Private String $AllowedNums = '0123456789';
 	Private String $IpAddress = '';
@@ -43,56 +44,10 @@ Class GetU_Class{
 	// * * *
 	// Path Checker : Validation of path
 	// Todo Mode
-	private static function PathCheck($tmp_Path, $tmp_Details){
-		// Fast check of provided data.
-		is_string($tmp_Path) === True ?: $tmp_Path = ' ';
-		is_string($tmp_Details) === True ?: $tmp_Details = ' ';
-		// Set Variables
-		$tmp_PC_PathLength = 1;
-		$tmp_PC_findDot = 0;
-		$tmp_PC_findSlash = 0;
-		$tmp_PC_StaticGet = " ";
-		$tmp_PC_getExtension = " ";
-		$tmp_PC_AllowedExtensionOne = 'mdma';
-		$tmp_PC_AllowedExtensionTwo = 'inUse';
-		$tmp_PC_AllowedExtensionThree = 'bip';
-		$tmp_PC_AllowedExtensionFour = " ";
-		// Get path length
-		$tmp_PC_PathLength = strlen($tmp_Path) ?: 1;
-		if((int)$tmp_PC_PathLength === 0){
-			return False;
-		}elseif((int)$tmp_PC_PathLength === 1){
-			return False;
-		}else{
-			if(!empty($tmp_Path) and is_string($tmp_Path) === True and strlen($tmp_PC_PathLength) > 7){
-				$tmp_PC_StaticGet = $tmp_Path[0] . $tmp_Path[1] . $tmp_Path[3] . $tmp_Path[4] . $tmp_Path[5] . $tmp_Path[6] ?: $tmp_PC_StaticGet = " ";
-				if(str_contains($tmp_Path, "../Dba/") and $tmp_PC_StaticGet === "../Dba/"){
-					$tmp_PC_findDot = substr_count($tmp_Path, ".") ?: $tmp_PC_findDot = 0;
-					$tmp_PC_findSlash = substr_count($tmp_Path, "/") ?: $tmp_PC_findSlash = 0;
-					$tmp_PC_getExtension = explode($tmp_Path, ".")((int)$tmp_PC_findDot-1) ?: $tmp_PC_getExtension = " ";
-					if(!empty($tmp_PC_getExtension) and is_string($tmp_PC_getExtension) === True and strlen($tmp_PC_getExtension) === 3 and $tmp_PC_getExtension === $tmp_PC_AllowedExtensionThree){ //bip
-						$tmp_PC_findDot === 4 ?: "return False";
-						$tmp_PC_findSlash === 4 ?: "return False";
-						if($tmp_PC_PathLength === 147){
-						//
-						}
-					}else{
-						return False;
-					}
-				}elseif(str_contains($tmp_Path, "../Dbu/") === True and $tmp_PC_StaticGet === "../Dbu/"){
-					//
-				}else{
-					//
-				}
-			}
-		}
-	}
 	// * * *
 	// UnlinkProperties
 	//
 	private function UnlinkProperties($RemoveProper){
-		$IsItOkay = False;
-		$IsItOkay = PathChecker($RemoveProper) ?: False;
 		if($IsItOkay === True){
 			clearstatcache($RemoveProper);
 			if(file_exists($RemoveProper) === true){
@@ -106,7 +61,7 @@ Class GetU_Class{
 	// * * *
 	// CFMess : Remove duplicate and some invalid.
 	//
-	private function CFMess($tmp_CF_Data){
+	Private Function CFMess($tmp_CF_Data){
 		$tmp_CFM_Return = ' ';
 		if(!empty($tmp_CF_Data) and is_string($tmp_CF_Data) === True){
 			$tmp_CFM_Count = 0;
@@ -152,9 +107,9 @@ Class GetU_Class{
 								$For_Extended_Ip = $this->tmp_ipaddress ?: $For_Extended_Ip = 'Unkown';
 								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('CFMess: Failled to validate on insert data. With IP Address: '.$For_Extended_Ip);
 							}
-                            if(is_string($tmp_CFM_tmp) === True and $tmp_add_name === $tmp_CFM_tmp){
-                                strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
-                            }
+							if(is_string($tmp_CFM_tmp) === True and $tmp_add_name === $tmp_CFM_tmp){
+								strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
+							}
 						}
 					}
 				}
@@ -186,7 +141,7 @@ Class GetU_Class{
 	// * * *
 	// ChangeToken : Ephemeral Access Tokens Manager
 	//
-	private function ChangeToken(){
+	Private Function ChangeToken(){
 		$OneTimeKey = hash('sha256', rand(101, 999).rand(1001,9999).rand(1001,9999).rand(10001,99999).rand(10001,99999).rand(1001,9999).rand(1001,9999).rand(101, 999));
 		$TmpSaveKey = hash('sha256', $OneTimeKey);
 		$nfileu = $UserPath.'/'.$TmpSaveKey.'.mdma';
@@ -199,50 +154,75 @@ Class GetU_Class{
 		}
 		return True;
 	}
-	private function GetDate($ptmp_daymonthyearhour){
-		if(is_string($ptmp_daymonthyearhour) === false or strlen($ptmp_daymonthyearhour) != 64){
-			$ptmp_daymonthyearhour = ' ';
-			$ptmp_daymonthyearhour = hash('sha256', date("d:m:Y:G")); // X2
-		}
-		return $ptmp_daymonthyearhour;
+	// * * *
+	// GetDate
+	//
+	Private Function Get_Date(){
+		$tmp_daymonthyearhour = '';
+		$tmp_daymonthyearhour = hash('sha256', date("d:m:Y:G")) ?: $tmp_daymonthyearhour = ''; // X2
+		return $tmp_daymonthyearhour;
 	}
-	private function GetTime($ptmptime){
+	// * * *
+	Private Function Get_Time($ptmptime){
 		is_string($ptmptime) === false ?: 1;
 		$ptmptime >= 0 ? $ptmptime += 1 : $ptmptime = 1;
 		return $ptmptime;
 	}
 	// * * *
 	// Get Ip Address
-	// ~ Updating
-	Private Function Get_IpAddress(){
+	//
+	Private Function Get_Ip(){
 		$tmp_ipaddress = '';
 		if(!empty($_SERVER) and is_array($_SERVER) === True){
-			if(!empty($_SERVER['REMOTE_ADDR']) and empty($_SERVER['HTTP_X_FORWARDED_FOR']) and empty($_SERVER['HTTP_CLIENT_IP'])){
+			if(!empty($_SERVER['REMOTE_ADDR'])){
 				$tmp_ipaddress_check = $_SERVER['REMOTE_ADDR'] ?: $tmp_ipaddress_check = '';
-				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) >= strlen($tmp_ipaddress)){
+				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) === strlen($tmp_ipaddress)){
 					$tmp_ipaddress = $tmp_ipaddress_check ?: $tmp_ipaddress = '';
 				}
 			}
-			if(!empty($_SERVER['HTTP_X_FORWARDED_FOR']) and empty($_SERVER['REMOTE_ADDR']) and empty($_SERVER['HTTP_CLIENT_IP'])) {
-				$tmp_ipaddress_check = $_SERVER['HTTP_X_FORWARDED_FOR'] ?: $tmp_ipaddress = '';
-				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) >= strlen($tmp_ipaddress)){
+			if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+				$tmp_ipaddress_check = $_SERVER['HTTP_X_FORWARDED_FOR'] ?: $tmp_ipaddress_check = '';
+				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) === strlen($tmp_ipaddress)){
 					$tmp_ipaddress = $tmp_ipaddress_check ?: $tmp_ipaddress = '';
 				}
 			}
-			if(!empty($_SERVER['HTTP_CLIENT_IP']) and empty($_SERVER['HTTP_X_FORWARDED_FOR']) and empty($_SERVER['HTTP_CLIENT_IP'])) {
-				$tmp_ipaddress_check = $_SERVER['HTTP_CLIENT_IP'] ?: $tmp_ipaddress = '';
-				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) >= strlen($tmp_ipaddress)){
+			if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+				$tmp_ipaddress_check = $_SERVER['HTTP_CLIENT_IP'] ?: $tmp_ipaddress_check = '';
+				if(!empty($tmp_ipaddress_check) and is_string($tmp_ipaddress_check) === True and !empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress_check) === strlen($tmp_ipaddress)){
 					$tmp_ipaddress = $tmp_ipaddress_check ?: $tmp_ipaddress = '';
 				}
 			}
 		}
+		return $tmp_ipaddress;
+	}
+	// * * *
+	Private Function Get_IpAddress(){
+		$tmp_ipaddress = $this->Get_Ip() ?: $tmp_ipaddress = '';
 		if(is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) > 6 and ((strlen($tmp_ipaddress) < 16 and substr_count($tmp_ipaddress, '.') === 3) or (strlen($tmp_ipaddress) < 40 and substr_count($tmp_ipaddress, ':') > 2 and substr_count($tmp_ipaddress, ':') < 8))){
-			// For Ip Address
+			$tmp_usedchar = '';
 			for($i = 0; $i < strlen($tmp_ipaddress); $i++){
-				$tmp_allowedchars = $this->AllowedNums.'.' ?: $tmp_allowedchars = '';
+				$tmp_allowedchars = $this->AllowedNums.'.:' ?: $tmp_allowedchars = '';
 				$tmp_IP = '';
 				if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and $i <= strlen($tmp_ipaddress) - 1){
 					$tmp_IP = $tmp_ipaddress[$i] ?: $tmp_IP = ' ';
+					if($tmp_IP = '.'){
+						if(!empty($tmp_usedchar) and is_string($tmp_usedchar) === True and $tmp_usedchar === ':'){
+							$tmp_ipaddress = '';
+							break;
+						}else{
+							$tmp_usedchar = '.';
+						}
+					}elseif($tmp_IP = ':'){
+						if(!empty($tmp_usedchar) and is_string($tmp_usedchar) === True and $tmp_usedchar === '.'){
+							$tmp_ipaddress = '';
+							break;
+						}else{
+							$tmp_usedchar = ':';
+						}
+					}
+				}else{
+					$tmp_ipaddress = '';
+					break;
 				}
 				if(!empty($tmp_allowedchars) and !empty($tmp_IP) and is_string($tmp_allowedchars) === True and is_string($tmp_IP) === True and strlen($tmp_allowedchars) <= 1 and strlen($tmp_IP) < 1 and strlen($tmp_IP) > 1 and str_contains($tmp_allowedchars, $tmp_IP) === False){
 					$tmp_ipaddress = '';
@@ -250,7 +230,25 @@ Class GetU_Class{
 				}
 			}
 			if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) > 1){
-				$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ' '; // X2
+				if(!empty($this->IpAddress) and is_string($this->IpAddress) and strlen($this->IpAddress) > 1){
+					if($this->IpAddress === $tmp_ipaddress){
+						$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ''; // X2
+					}else{
+						if(!empty($this->Extended_Logging) and $this->Extended_Logging === True){
+							//profile_loggin
+							$this->Extended_Logging('Get_IpAddress: Ip is not identical deauth.');
+						}	
+					}
+				}else{
+					if(empty($this->IpAddress) and strlen($this->IpAddress) < 1){
+						$this-> IpAddress = $tmp_ipaddress;
+						$tmp_ipaddress = hash('sha256', $tmp_ipaddress) ?: $tmp_ipaddress = ''; // X2
+					}else{
+						if(!empty($this->Extended_Logging) and $this->Extended_Logging === True){
+							$this->Extended_Logging('Get_IpAddress: Failled at validating old ip.');
+						}
+					}
+				}
 			}
 		}else{
 			$tmp_ipaddress = '';
@@ -263,9 +261,12 @@ Class GetU_Class{
 	private function BPacket($exponent, $ptmp_daymonthyearhour, $ptmptime, $ptmp_ipaddress){
 		if($this->IsBPacketUsed === False){
 			$this->IsBPacketUsed = True;
-			$ptmp_daymonthyearhour = $this->FixDate($ptmp_daymonthyearhour) ?: ' ';
-			$ptmptime = $this->FixDate($ptmptime) ?: 0;
-			$ptmp_ipaddress = $this->FixDate($ptmp_ipaddress) ?: ' ';
+			$tmp_BP_daymonthyear = '';
+			$tmp_BP_daymonthyear = $this->Get_Date ?: $tmp_BP_daymonthyear = '';
+			$tmp_BP_GetIp = '';
+			$tmp_BP_GetIp = $this->Get_IpAddress ?: $tmp_BP_GetIp = '';
+			$ptmptime = $this->FixDate($ptmptime) ?: $ptmptime = 0;
+			$ptmp_ipaddress = $this->FixDate($ptmp_ipaddress) ?: $ptmp_ipaddress = ' ';
 			$tmpfileip = '../Dba/iprb/'.$ptmp_daymonthyearhour.'/'.$ptmptime.'.'.$ptmp_ipaddress.'.bip';
 			if(is_string($tmpfileip) === true and strlen($tmpfileip) === 147 and substr_count($tmpfileip, '.') === 4 and substr_count($tmpfileip, '/') === 3 and str_contains($tmpfileip, '../Dba/iprb/') === True and str_contains($tmpfileip, '.bip') === True){
 				clearstatcache($tmpfileip);
@@ -273,10 +274,10 @@ Class GetU_Class{
 					file_put_contents($tmpfileip, ' ');
 				}elseif(file_exists($tmpfileip) === true and $ptmptime < 5){ // Check if next log exist.
 					for($h = $ptmptime; $h <= 5; $h++){
-						$ptmptime = $h ?: ' ';
-						$ptmp_daymonthyearhour = FixDate($ptmp_daymonthyearhour) ?: ' ';
-						$ptmptime = FixDate($ptmptime) ?: 0;
-						$ptmp_ipaddress = FixDate($ptmp_ipaddress) ?: ' ';
+						$ptmptime = $h ?: $ptmptime = ' ';
+						$ptmp_daymonthyearhour = FixDate($ptmp_daymonthyearhour) ?: $ptmp_daymonthyearhour = ' ';
+						$ptmptime = FixDate($ptmptime) ?: $ptmptime = 0;
+						$ptmp_ipaddress = FixDate($ptmp_ipaddress) ?: $ptmp_ipaddress = ' ';
 						$tmpfileip = '../Dba/iprb/'.$ptmp_daymonthyearhour.'/'.$h.'.'.$ptmp_ipaddress.'.bip';
 						clearstatcache($tmpfileip);
 						if(file_exists($tmpfileip) === false and $ptmptime === $h){
@@ -315,15 +316,15 @@ Class GetU_Class{
 		}
 	}
 	// * * *
-	// Server Response And Data
+	// Server Response And Data : Control and fake time and data length for the responses that server gives. 
 	//
-	private function SResponse($SData){
+	Private Function SResponse($SData){
 		is_string($SData) === True ?: $SData = 'Packet!';
 		$OneZeroTwoFour = 1024;
 		$TwoZeroFourEight = 2048;
 		$FourZeroNineSix = 4096;
 		$DataStringLength = strlen($SData);
-		// Try fake data for response length prediction-guessing hardening.
+		// Try fake data for response length and time prediction-guessing hardening. Octet or Echo
 		if($DataStringLength < $OneZeroTwoFour){ // < 1024
 			if($DataStringLength === 1023){
 				$SData = $SData.' ';
@@ -363,14 +364,7 @@ Class GetU_Class{
 	}
 	// /*/ Code /*/ //
 	Private Function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
-		$tmp_ipaddress = $this->Get_IpAddress ?: $tmp_ipaddress = '';
-		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True){
-		}else{
-			$tmp_ipaddress = '';
-			$Get_UserName = '';
-			$Get_AccessToken = '';
-			$Get_SACData = '';
-		}
+		$tmp_ipaddress = $this->Get_IpAddress() ?: $tmp_ipaddress = '';
 		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) === 64){
 			// ** Create Date Hash
 			$tmp_daymonthyearhour = 'cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
@@ -383,21 +377,21 @@ Class GetU_Class{
 			// ** IP logs
 			$bannedforhourfolder = '../Dba/iprb/'.$tmp_daymonthyearhour;
 			clearstatcache($bannedforhourfolder);
-			if(file_exists($bannedforhourfolder) === False){
+			if(!empty($bannedforhourfolder) and file_exists($bannedforhourfolder) === False){
 				$bansfolder = '../Dba/iprb/';
 				clearstatcache($bansfolder);
-				if(file_exists($bansfolder) === False){
+				if(!empty($bansfolder) and file_exists($bansfolder) === False){
 					$rootfolder = '../Dba';
 					clearstatcache($rootfolder);
-					if(file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
+					if(!empty($rootfolder) and file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
 						if(mkdir($rootfolder, 0600) === False and $this->ExtendedLogging_E === True){
 							$this->Extended_Logging('AA');
 						}
-					}elseif(is_writeable($rootfolder) === False){
+					}elseif(!empty($rootfolder) and is_writeable($rootfolder) === False){
 						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('AA');
 					}
 					clearstatcache($bansfolder);
-					if(file_exists($bansfolder) === False and is_writeable($bansfolder) === True){
+					if(!empty($bansfolder) and file_exists($bansfolder) === False and is_writeable($bansfolder) === True){
 						if(mkdir($bansfolder, 0600) === False and $this->ExtendedLogging_E === True){
 							$this->Extended_Logging('AA');
 						}
@@ -405,23 +399,63 @@ Class GetU_Class{
 						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('AA');
 					}
 				}
-				clearstatcache($bannedforhourfolder);
-				if(file_exists($bannedforhourfolder) === True and is_writeable($bannedforhourfolder) === True){
-					if(mkdir($bannedforhourfolder, 0600) === False and $this->ExtendedLogging_E === True){
-						$this->Extended_Logging('AA');
+				clearstatcache();
+				if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
+					if(is_writeable($bannedforhourfolder) === True){
+						if(mkdir($bannedforhourfolder, 0600) === False and $this->ExtendedLogging_E === True){
+							$this->Extended_Logging('We could not create the folder for writing packet counts : '.$bannedforhourfolder);
+						}
+					}elseif(is_writeable($bannedforhourfolder) === False){
+						clearstatcache();
+						if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seem to not exist and we do not have the permission to create it.');
+						}elseif(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True){
+							if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True and is_writeable($bannedforhourfolder) === False){
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seemed not existen before and that we did not had the permission to create it, but it was created.');
+							}elseif(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True and is_writeable($bannedforhourfolder) === True){
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seemed not existen before and that we did not had the permission to create it, but it was created and we have the permissions now.');
+							}else{
+								if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === False){
+									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts is not generated and the variable storing it is not a string. The variable existed before and it was a string.');
+								}else{
+									if(isset($bannedforhourfolder) === False){
+										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset and it existed before. Also we did not had the permissions to write to it but the file created after.');
+									}else{
+										//Reference: Critical2
+										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('We could not determine what happened but it happened. Something seem to change real time the data that we try to access. Reference: Critical2');
+									}
+								}
+							}
+						}else{
+							if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === False){
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts is not generated and the variable storing it is not a string.');
+							}else{
+								if(isset($bannedforhourfolder) === False){
+									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset and it existed before.');
+								}
+							}
+						}
+					}else{
+						//
 					}
 				}else{
-					$this->ExtendedLogging_E === False ?: $this->Extended_Logging('AA');
+					if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === False){
+						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts is not generated and the variable storing it is not a string.');
+					}else{
+						if(isset($bannedforhourfolder) === False){
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset.');
+						}
+					}
 				}
 			}
-			$onefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/1.'.$tmp_ipaddress.'.bip';
-			$twofileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/2.'.$tmp_ipaddress.'.bip';
-			$threefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/3.'.$tmp_ipaddress.'.bip';
-			$fourfileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/4.'.$tmp_ipaddress.'.bip';
-			$fivefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/5.'.$tmp_ipaddress.'.bip';
 			$tmp_ip_blockedrequests = 0;
-			clearstatcache($bannedforhourfolder);
-			if(file_exists($bannedforhourfolder) === True){
+			clearstatcache();
+			if(!empty($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True){
+				$onefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/1.'.$tmp_ipaddress.'.bip' ?: $onefileip = '../Dba/iprb';
+				$twofileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/2.'.$tmp_ipaddress.'.bip' ?: $twofileip = '../Dba/iprb';
+				$threefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/3.'.$tmp_ipaddress.'.bip' ?: $threefileip = '../Dba/iprb';
+				$fourfileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/4.'.$tmp_ipaddress.'.bip' ?: $fourfileip = '../Dba/iprb';
+				$fivefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/5.'.$tmp_ipaddress.'.bip' ?: $fivefileip = '../Dba/iprb';
 				clearstatcache();
 				if(file_exists($fivefileip)){
 					$tmp_ip_blockedrequests = 5;
@@ -539,7 +573,7 @@ Class GetU_Class{
 					// End Game
 					$tmp_checkaccess = '../Dbu/'.$UserName.'/getu.'.$tmp_AccessToken_GT.'.inUse'; // Set inUse
 					clearstatcache();
-					if(strlen($tmp_AccessToken_AC) === 1 and (int)$tmp_AccessToken_AC === 3 and is_string($tmp_one_nc) === true and is_string($tmp_two_nc) === true and strlen($tmp_one_nc) > 4 and strlen($tmp_two_nc) > 4 and strlen($tmp_one_nc) < 15 and strlen($tmp_two_nc) < 15 and strlen($tmp_one_nc) === strlen($UserName) and $tmp_one_nc === $UserName and strlen($tmp_two_nc) === strlen($UserName) and $tmp_two_nc === $UserName and $tmp_one_nc === $tmp_two_nc and is_string($tmp_one_ip) === true and is_string($tmp_two_ip) === true and is_string($tmp_ipaddress) === true and strlen($tmp_one_ip) === 64 and strlen($tmp_two_ip) === 64 and $tmp_one_ip != $tmp_ipaddress and $tmp_one_ip != $tmp_two_ip and $tmp_two_ip === $tmp_ipaddress and is_string($UserData) === true and is_string($tmp_ipfile) === true and strlen($tmp_UDone) === 7 and $tmp_UDone == '../Dbu/' and is_string($tmp_UDtwo) === true and strlen($tmp_UDtwo) === 1 and $tmp_UDtwo == '/' and strlen($tmp_UDthree) === 5 and $tmp_UDthree == '.mdma' and strlen($tmp_IPone) === 7 and $tmp_IPone == '../Dbu/' and is_string($tmp_IPtwo) === true and strlen($tmp_IPtwo) === 1 and $tmp_IPtwo === '/' and strlen($tmp_IPthree) === 5 and $tmp_IPthree === '.mdma' and $tmp_UDthree === $tmp_IPthree and strlen($tmp_UD_atlengthone) === 69 and strlen($tmp_IP_iplengthone) === 69 and substr_count($UserData, '.') === 3 and substr_count($tmp_ipfile, '.') === 3 and substr_count($UserData, '/') === 3 and substr_count($tmp_ipfile, '/') === 3 and $tmp_UD_atlengthtwo === strlen($UserData) and $tmp_IP_iplengthtwo === strlen($tmp_ipfile) and $tmp_UD_atlengthtwo === $tmp_IP_iplengthtwo and strlen($UserData) > 81 and strlen($UserData) < 92 and strlen($tmp_ipfile) > 81 and strlen($tmp_ipfile) < 92 and $tmp_AccessToken_GT !== $DoubleHash and hash_equals($tmp_AccessToken_GT, $DoubleHash) === False and strlen($UserData) === strlen($tmp_ipfile) and $UserData != $tmp_ipfile and hash_equals($DoubleHash, $tmp_ipaddress) === false and file_exists($UserData) === true and file_exists($tmp_ipfile) === true and file_exists($tmp_checkaccess) === false){
+					if(isset($tmp_AccessToken_AC) === True and is_string($tmp_AccessToken_AC) === True and strlen($tmp_AccessToken_AC) === 1 and (int)$tmp_AccessToken_AC === 3 and isset($tmp_one_nc) === True and is_string($tmp_one_nc) === True and isset($tmp_two_nc) === True and is_string($tmp_two_nc) === True and strlen($tmp_one_nc) > 4 and strlen($tmp_two_nc) > 4 and strlen($tmp_one_nc) < 15 and strlen($tmp_two_nc) < 15 and isset($UserName) === True and is_string($UserName) === True and strlen($tmp_one_nc) === strlen($UserName) and $tmp_one_nc === $UserName and strlen($tmp_two_nc) === strlen($UserName) and $tmp_two_nc === $UserName and $tmp_one_nc === $tmp_two_nc and isset($tmp_one_ip) === True and is_string($tmp_one_ip) === True and isset($tmp_two_ip) === True and is_string($tmp_two_ip) === True and isset($tmp_ipaddress) === True and is_string($tmp_ipaddress) === True and strlen($tmp_one_ip) === 64 and strlen($tmp_two_ip) === 64 and $tmp_one_ip != $tmp_ipaddress and $tmp_one_ip != $tmp_two_ip and $tmp_two_ip === $tmp_ipaddress and isset($UserData) === True and is_string($UserData) === True and isset($tmp_ipfile) === True and is_string($tmp_ipfile) === True and isset($tmp_UDone) === True and strlen($tmp_UDone) === 7 and $tmp_UDone === '../Dbu/' and isset($tmp_UDtwo) === True and is_string($tmp_UDtwo) === True and strlen($tmp_UDtwo) === 1 and $tmp_UDtwo === '/' and isset($tmp_UDthree) === True and strlen($tmp_UDthree) === 5 and $tmp_UDthree === '.mdma' and isset($tmp_IPone) === True and is_string($tmp_IPone) === True and strlen($tmp_IPone) === 7 and $tmp_IPone === '../Dbu/' and isset($tmp_IPtwo) === True and is_string($tmp_IPtwo) === True and strlen($tmp_IPtwo) === 1 and $tmp_IPtwo === '/' and isset($tmp_IPthree) === True and is_string($tmp_IPthree) === True and strlen($tmp_IPthree) === 5 and $tmp_IPthree === '.mdma' and $tmp_UDthree === $tmp_IPthree and isset($tmp_UD_atlengthone) === True and is_string($tmp_UD_atlengthone) === True and strlen($tmp_UD_atlengthone) === 69 and isset($tmp_IP_iplengthone) === True and is_string($tmp_IP_iplengthone) === True and strlen($tmp_IP_iplengthone) === 69 and substr_count($UserData, '.') === 3 and substr_count($tmp_ipfile, '.') === 3 and substr_count($UserData, '/') === 3 and substr_count($tmp_ipfile, '/') === 3 and isset($tmp_UD_atlengthtwo) === True and is_integer($tmp_UD_atlengthtwo) === True and $tmp_UD_atlengthtwo === strlen($UserData) and isset($tmp_IP_iplengthtwo) === True and is_integer($tmp_IP_iplengthtwo) === True and $tmp_IP_iplengthtwo === strlen($tmp_ipfile) and $tmp_UD_atlengthtwo === $tmp_IP_iplengthtwo and strlen($UserData) > 81 and strlen($UserData) < 92 and strlen($tmp_ipfile) > 81 and strlen($tmp_ipfile) < 92 and $tmp_AccessToken_GT != $DoubleHash and hash_equals($tmp_AccessToken_GT, $DoubleHash) === False and strlen($UserData) === strlen($tmp_ipfile) and $UserData != $tmp_ipfile and $DoubleHash != $tmp_ipfile and hash_equals($DoubleHash, $tmp_ipaddress) === False and file_exists($UserData) === True and file_exists($tmp_ipfile) === True and file_exists($tmp_checkaccess) === False){
 						clearstatcache($tmp_checkaccess);
 						if(is_writeable($tmp_checkaccess) === True){
 							file_put_contents($tmp_checkaccess, ' '); // Set .inUse file
@@ -549,14 +583,14 @@ Class GetU_Class{
 								// We send only the new data if the client don't ask for all data.
 								// Each time we wipe new data file and put them in old data
 								// We want to CFMess all the data we get, clear the new data file and put everything in old file
-								// unless the client specifies that we should delete all data after each read. 
+								// unless the client specifies that we should delete all data after each read.
 								$UsersOldFile = '../Dbu/'.$UserName.'/Messages/Users.data';
 								$UsersNewFile = '../Dbu/'.$UserName.'/Messages/Users.n.data';
-								clearstatcache($UsersOldFile);
-								clearstatcache($UsersNewFile);
+								clearstatcache();
 								if(strlen($UsersOldFile) > 31 and strlen($UsersOldFile) < 42 and strlen($UsersNewFile) > 31 and strlen($UsersNewFile) < 42 and ((file_exists($UsersOldFile) === True and file_exists($UsersNewFile) === True) or (file_exists($UsersOldFile) === True or file_exists($UsersNewFile) === True))){
 									$GetUserNewData = '';
 									$GetUserOldData = '';
+									$GUserCData = '';
 									// Check for new data
 									clearstatcache($UsersNewFile);
 									if(file_exists($UsersNewFile)){
@@ -569,6 +603,8 @@ Class GetU_Class{
 												$GetUserNewData = '';
 											}else{
 												$GetUserNewData = $this->CFMess($GetUserNewData) ?: $GetUserNewData = '';
+												$GUserCData = $GetUserNewData;
+												$this->PutConO($UsersNewFile, '');
 											}
 										}else{
 											$GetUserNewData = '';
@@ -588,6 +624,12 @@ Class GetU_Class{
 												$GetUserOldData = '';
 											}else{
 												$GetUserOldData = $this->CFMess($GetUserOldData) ?: $GetUserOldData = '';
+												$GUserCData = $GUserCData.$GetUserOldData;
+												if((int)$SACData === 1){
+													$this->PutConO($UsersOldFile, '');
+												}else{
+													$this->PutConO($UsersOldFile, $GUserCData);
+												}
 											}
 										}else{
 											$GetUserOldData = '';
@@ -595,28 +637,13 @@ Class GetU_Class{
 									}else{
 										$GetUserOldData = '';
 									}
-									// *** // --- Data --- // *** //
-									$GUserCData = '';
-									if(!empty($GetUserNewData) and is_string($GetUserNewData) === True and strlen($GetUserNewData) > 5){
-										$GUserCData = $GetUserNewData;
-										$GetUserNewData = '';
-									}
-									if(!empty($GetUserOldData) and is_string($GetUserOldData) === True and strlen($GetUserOldData) > 5){
-										$GUserCData = $GUserCData.$GetUserOldData;
-										$GetUserOldData = '';
-									}
-									$GUserCData = $this->CFMess($GUserCData) ?: $GUserCData = '';
-									$this->PutConO($UsersNewFile, '');
-									if(!empty($GUserCData) and is_string($GUserCData) === True and strlen($GUserCData) > 0){
-										if((int)$SACData === 1){
-											$this->PutConO($UsersOldFile, '');
-										}else{
-											$this->PutConO($UsersOldFile, $GUserCData);
-										}
-									}
 									// *** // --- Send --- // *** //
 									$tmp_S_DataLength = 0;
-									is_string($GUserCData) === True ? $tmp_S_DataLength = strlen($GUserCData) : $tmp_S_DataLength = 0;
+									if(!empty($GUserCData) and is_string($GUserCData) === True){
+										$tmp_S_DataLength = strlen($GUserCData) ?: $tmp_S_DataLength = 0;
+									}else{
+										$tmp_S_DataLength = 0;
+									}
 									if($tmp_S_DataLength > 5){
 										$tmpmsgcount = substr_count($GUserCData, ';') ?: $tmpmsgcount = 0;
 										if($tmpmsgcount > 0){
@@ -661,7 +688,7 @@ Class GetU_Class{
 						}
 					}else{
 						clearstatcache();
-						if(strlen($tmp_AccessToken_AC) === 1 and (int)$tmp_AccessToken_AC === 3 and is_string($tmp_one_nc) === true and is_string($tmp_two_nc) === true and strlen($tmp_one_nc) > 4 and strlen($tmp_two_nc) > 4 and strlen($tmp_one_nc) < 15 and strlen($tmp_two_nc) < 15 and strlen($tmp_one_nc) === strlen($UserName) and $tmp_one_nc === $UserName and strlen($tmp_two_nc) === strlen($UserName) and $tmp_two_nc === $UserName and $tmp_one_nc === $tmp_two_nc and is_string($tmp_one_ip) === true and is_string($tmp_two_ip) === true and is_string($tmp_ipaddress) === true and strlen($tmp_one_ip) === 64 and strlen($tmp_two_ip) === 64 and $tmp_one_ip != $tmp_ipaddress and $tmp_one_ip != $tmp_two_ip and $tmp_two_ip === $tmp_ipaddress and is_string($UserData) === true and is_string($tmp_ipfile) === true and strlen($tmp_UDone) === 7 and $tmp_UDone == '../Dbu/' and is_string($tmp_UDtwo) === true and strlen($tmp_UDtwo) === 1 and $tmp_UDtwo == '/' and strlen($tmp_UDthree) === 5 and $tmp_UDthree === '.mdma' and strlen($tmp_IPone) === 7 and $tmp_IPone == '../Dbu/' and is_string($tmp_IPtwo) === true and strlen($tmp_IPtwo) === 1 and $tmp_IPtwo === '/' and strlen($tmp_IPthree) === 5 and $tmp_IPthree === '.mdma' and $tmp_UDthree === $tmp_IPthree and strlen($tmp_UD_atlengthone) === 69 and strlen($tmp_IP_iplengthone) === 69 and substr_count($UserData, '.') === 3 and substr_count($tmp_ipfile, '.') === 3 and substr_count($UserData, '/') === 3 and substr_count($tmp_ipfile, '/') === 3 and $tmp_UD_atlengthtwo === strlen($UserData) and $tmp_IP_iplengthtwo === strlen($tmp_ipfile) and $tmp_UD_atlengthtwo === $tmp_IP_iplengthtwo and strlen($UserData) > 81 and strlen($UserData) < 92 and strlen($tmp_ipfile) > 81 and strlen($tmp_ipfile) < 92 and $tmp_AccessToken_GT != $DoubleHash and hash_equals($tmp_AccessToken_GT, $DoubleHash) === false and strlen($UserData) === strlen($tmp_ipfile) and $UserData != $tmp_ipfile and hash_equals($DoubleHash, $tmp_ipaddress) === false and file_exists($UserData) === true and file_exists($tmp_ipfile) === true and file_exists($tmp_checkaccess) === true){
+						if(strlen($tmp_AccessToken_AC) === 1 and (int)$tmp_AccessToken_AC === 3 and is_string($tmp_one_nc) === true and is_string($tmp_two_nc) === true and strlen($tmp_one_nc) > 4 and strlen($tmp_two_nc) > 4 and strlen($tmp_one_nc) < 15 and strlen($tmp_two_nc) < 15 and strlen($tmp_one_nc) === strlen($UserName) and $tmp_one_nc === $UserName and strlen($tmp_two_nc) === strlen($UserName) and $tmp_two_nc === $UserName and $tmp_one_nc === $tmp_two_nc and is_string($tmp_one_ip) === true and is_string($tmp_two_ip) === true and is_string($tmp_ipaddress) === true and strlen($tmp_one_ip) === 64 and strlen($tmp_two_ip) === 64 and $tmp_one_ip != $tmp_ipaddress and $tmp_one_ip != $tmp_two_ip and $tmp_two_ip === $tmp_ipaddress and is_string($UserData) === true and is_string($tmp_ipfile) === true and strlen($tmp_UDone) === 7 and $tmp_UDone == '../Dbu/' and is_string($tmp_UDtwo) === true and strlen($tmp_UDtwo) === 1 and $tmp_UDtwo == '/' and strlen($tmp_UDthree) === 5 and $tmp_UDthree === '.mdma' and strlen($tmp_IPone) === 7 and $tmp_IPone == '../Dbu/' and is_string($tmp_IPtwo) === true and strlen($tmp_IPtwo) === 1 and $tmp_IPtwo === '/' and strlen($tmp_IPthree) === 5 and $tmp_IPthree === '.mdma' and $tmp_UDthree === $tmp_IPthree and strlen($tmp_UD_atlengthone) === 69 and strlen($tmp_IP_iplengthone) === 69 and substr_count($UserData, '.') === 3 and substr_count($tmp_ipfile, '.') === 3 and substr_count($UserData, '/') === 3 and substr_count($tmp_ipfile, '/') === 3 and $tmp_UD_atlengthtwo === strlen($UserData) and $tmp_IP_iplengthtwo === strlen($tmp_ipfile) and $tmp_UD_atlengthtwo === $tmp_IP_iplengthtwo and strlen($UserData) > 81 and strlen($UserData) < 92 and strlen($tmp_ipfile) > 81 and strlen($tmp_ipfile) < 92 and $tmp_AccessToken_GT != $DoubleHash and hash_equals($tmp_AccessToken_GT, $DoubleHash) === False and strlen($UserData) === strlen($tmp_ipfile) and $UserData != $tmp_ipfile and hash_equals($DoubleHash, $tmp_ipaddress) === false and file_exists($UserData) === true and file_exists($tmp_ipfile) === true and file_exists($tmp_checkaccess) === true){
 							$this->SResponse('Packet!');
 						}else{
 							$this->BPacket('Packet!', $tmp_daymonthyearhour, $tmp_ip_blockedrequests, $tmp_ipaddress);
@@ -681,9 +708,7 @@ Class GetU_Class{
 	}
 	// * * *
 	// Construct..OR?
-	public function __construct($Get_UserName, $Get_AccessToken, $Get_SACData){
-		$this->IsBPacketUsed = False;
-		$this->IsFunctionInUse = False;
+	Public Function __construct($Get_UserName, $Get_AccessToken, $Get_SACData){
 		$this->GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData);
 	}
 }
