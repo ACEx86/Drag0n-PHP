@@ -69,7 +69,7 @@ Class GetU_Class{
 						$tmp_CFM_AllowedChars = $this->AllowedChars.$this->AllowedNums.';' ?: $tmp_CFM_AllowedChars = '';
 						for($n = 0; $n < $tmp_CFM_tmpLength; $n++){
 							$tmp_CFM_tmpName = ' ';
-							if(isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 5 and $n <= strlen($tmp_CFM_tmp) - 1){
+							if(isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and $n <= strlen($tmp_CFM_tmp) - 1){
 								$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
 							}else{
 								$tmp_CFM_tmp = ' ';
