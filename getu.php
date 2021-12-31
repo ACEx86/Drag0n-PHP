@@ -24,9 +24,15 @@ $Get_UserName = null; // Username
 $Get_AccessToken = null; // AccessToken
 $Get_SACData = 2; // Data Actions
 if(!empty($_GET) and is_array($_GET) === True){
-	!empty($_GET['n']) ? $Get_UserName = $_GET['n'] : $Get_UserName = null;
-	!empty($_GET['p']) ? $Get_AccessToken = $_GET['p'] : $Get_AccessToken = null;
-	!empty($_GET['i']) ? $Get_SACData = $_GET['i'] : $Get_SACData = 2;
+	if(!empty($_GET['n'])){
+		$Get_UserName = $_GET['n'] ?: $Get_UserName = null;
+	}
+	if(!empty($_GET['p'])){
+		$Get_AccessToken = $_GET['p'] ?: $Get_AccessToken = null;
+	}
+	if(!empty($_GET['i'])){
+		$Get_SACData = $_GET['i'] ?: $Get_SACData = '2';
+	}
 }
 unset($_GET);
 $GetU = new GetU_Class($Get_UserName, $Get_AccessToken, $Get_SACData);
@@ -42,26 +48,9 @@ Class GetU_Class{
 	Private String $IpAddress = '';
 	// - Start Functions
 	// * * *
-	// Path Checker : Validation of path
-	// Todo Mode
-	// * * *
-	// UnlinkProperties
+	// CheckAndFix : Remove duplicate and some invalid.
 	//
-	private function UnlinkProperties($RemoveProper){
-		if($IsItOkay === True){
-			clearstatcache($RemoveProper);
-			if(file_exists($RemoveProper) === true){
-				unlink($RemoveProper);
-				return True;
-			}
-		}else{
-			return False;
-		}
-	}
-	// * * *
-	// CFMess : Remove duplicate and some invalid.
-	//
-	Private Function CFMess($tmp_CF_Data){
+	Private Function CheckAndFix($tmp_CF_Data){
 		$tmp_CFM_Return = ' ';
 		if(!empty($tmp_CF_Data) and is_string($tmp_CF_Data) === True){
 			$tmp_CFM_Count = 0;
@@ -112,7 +101,7 @@ Class GetU_Class{
 							if(empty($tmp_add_name)){
 								$tmp_add_name = '';
 								$For_Extended_Ip = $this->tmp_ipaddress ?: $For_Extended_Ip = 'Unkown';
-								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('CFMess: Failled to validate on insert data. With IP Address: '.$For_Extended_Ip);
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('CheckAndFix: Failled to validate on insert data. With IP Address: '.$For_Extended_Ip);
 							}
 							if(is_string($tmp_CFM_tmp) === True and $tmp_add_name === $tmp_CFM_tmp){
 								strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
@@ -134,7 +123,7 @@ Class GetU_Class{
 	// * * *
 	// PutConO : Writes to files
 	//
-	private function PutConO($aa, $ab, $ag){
+	Private Function PutConO($aa, $ab, $ag){
 		if(strlen($aa) > 28){
 			if(strlen($ab) === 0){
 				// DELETE DATA
@@ -161,7 +150,7 @@ Class GetU_Class{
 		if(file_exists($nfileu) === true){
 			return False;
 		}else{
-			file_put_contents($nfileu, " ");
+			file_put_contents($nfileu, ' ');
 		}
 		return True;
 	}
@@ -269,7 +258,7 @@ Class GetU_Class{
 	// * * *
 	// Blocked Packets
 	//
-	private function BPacket($exponent, $ptmp_daymonthyearhour, $ptmptime, $ptmp_ipaddress){
+	Private Function BPacket($exponent, $ptmp_daymonthyearhour, $ptmptime, $ptmp_ipaddress){
 		if($this->IsBPacketUsed === False){
 			$this->IsBPacketUsed = True;
 			$tmp_BP_daymonthyear = '';
@@ -387,22 +376,39 @@ Class GetU_Class{
 			$tmp_serverhour = date("G");
 			// ** IP logs
 			$bannedforhourfolder = '../Dba/iprb/'.$tmp_daymonthyearhour;
-			clearstatcache($bannedforhourfolder);
-			if(!empty($bannedforhourfolder) and file_exists($bannedforhourfolder) === False){
+			clearstatcache();
+			if(isset($bannedforhourfolder) === True and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
 				$bansfolder = '../Dba/iprb/';
-				clearstatcache($bansfolder);
-				if(!empty($bansfolder) and file_exists($bansfolder) === False){
+				clearstatcache();
+				if(isset($bansfolder) === True and is_string($bansfolder) === True and file_exists($bansfolder) === False){
 					$rootfolder = '../Dba';
-					clearstatcache($rootfolder);
-					if(!empty($rootfolder) and file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
+					clearstatcache();
+					if(isset($rootfolder) === True and is_string($rootfolder) === True and file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
 						if(mkdir($rootfolder, 0600) === False and $this->ExtendedLogging_E === True){
-							$this->Extended_Logging('AA');
+							$this->Extended_Logging('We could not create the folder for writing packet counts : '.$rootfolder);
 						}
-					}elseif(!empty($rootfolder) and is_writeable($rootfolder) === False){
-						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('AA');
+					}else{
+						if(isset($rootfolder) === True){
+							if(is_string($rootfolder) === True){
+								clearstatcache();
+								if(file_exists($rootfolder) === False){
+									if(is_writable($rootfolder) === False){
+										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' , seem to not exist and we do not have the permission to create it.');
+									}else{
+										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' , seem to not exist and that we could not create it because we did not had the permission before even if we have them now.');
+									}
+								}else{
+									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' , seemed not existen before but it exist now.');
+								}
+							}else{
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is not a string.');
+							}
+						}else{
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset even after we tried to set it.');
+						}
 					}
-					clearstatcache($bansfolder);
-					if(!empty($bansfolder) and file_exists($bansfolder) === False and is_writeable($bansfolder) === True){
+					clearstatcache();
+					if(isset($bansfolder) === True and is_string($bansfolder) === True and file_exists($bansfolder) === False and is_writeable($bansfolder) === True){
 						if(mkdir($bansfolder, 0600) === False and $this->ExtendedLogging_E === True){
 							$this->Extended_Logging('AA');
 						}
@@ -411,7 +417,7 @@ Class GetU_Class{
 					}
 				}
 				clearstatcache();
-				if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
+				if(isset($bannedforhourfolder) === True and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
 					if(is_writeable($bannedforhourfolder) === True){
 						if(mkdir($bannedforhourfolder, 0600) === False and $this->ExtendedLogging_E === True){
 							$this->Extended_Logging('We could not create the folder for writing packet counts : '.$bannedforhourfolder);
@@ -593,7 +599,7 @@ Class GetU_Class{
 								// Inside here we get the new and old user names that contacted the client.
 								// We send only the new data if the client don't ask for all data.
 								// Each time we wipe new data file and put them in old data
-								// We want to CFMess all the data we get, clear the new data file and put everything in old file
+								// We want to CheckAndFix all the data we get, clear the new data file and put everything in old file
 								// unless the client specifies that we should delete all data after each read.
 								$UsersOldFile = '../Dbu/'.$UserName.'/Messages/Users.data';
 								$UsersNewFile = '../Dbu/'.$UserName.'/Messages/Users.n.data';
@@ -613,7 +619,7 @@ Class GetU_Class{
 											if($tmpmsgcount < 1){
 												$GetUserNewData = '';
 											}else{
-												$GetUserNewData = $this->CFMess($GetUserNewData) ?: $GetUserNewData = '';
+												$GetUserNewData = $this->CheckAndFix($GetUserNewData) ?: $GetUserNewData = '';
 												$GUserCData = $GetUserNewData;
 												$this->PutConO($UsersNewFile, '');
 											}
@@ -634,7 +640,7 @@ Class GetU_Class{
 											if($tmpmsgcount < 1){
 												$GetUserOldData = '';
 											}else{
-												$GetUserOldData = $this->CFMess($GetUserOldData) ?: $GetUserOldData = '';
+												$GetUserOldData = $this->CheckAndFix($GetUserOldData) ?: $GetUserOldData = '';
 												$GUserCData = $GUserCData.$GetUserOldData;
 												if((int)$SACData === 1){
 													$this->PutConO($UsersOldFile, '');
