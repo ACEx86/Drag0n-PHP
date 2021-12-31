@@ -22,7 +22,7 @@
 date_default_timezone_set('UTC');
 $Get_UserName = null; // Username
 $Get_AccessToken = null; // AccessToken
-$Get_SACData = 2; // Data Actions
+$Get_SACData = '2'; // Data Actions
 if(!empty($_POST) and is_array($_POST) === True){
 	if(!empty($_POST['n']) and is_string($_POST['n']) === True){
 		$Get_UserName = $_POST['n'] ?: $Get_UserName = null;
@@ -50,30 +50,26 @@ Class GetU_Class{
 	// * * *
 	// CheckAndFix : Remove duplicate and some invalid.
 	//
-	Private Function CheckAndFix($tmp_CF_Data){
+	Private Function CheckAndFix($tmp_CAF_Data){
 		$tmp_CFM_Return = ' ';
-		if(!empty($tmp_CF_Data) and is_string($tmp_CF_Data) === True){
+		if(isset($tmp_CAF_Data) === True and is_string($tmp_CAF_Data) === True){
 			$tmp_CFM_Count = 0;
 			$tmp_CFM_DataLength = 0;
-			$tmp_CFM_Count = substr_count($tmp_CF_Data, ';') ?: $tmp_CFM_Count = 0;
-			$tmp_CFM_DataLength = strlen($tmp_CF_Data) ?: $tmp_CFM_DataLength = 0;
-			if($tmp_CFM_Count > 0 and $tmp_CFM_DataLength > 0){
+			$tmp_CFM_Count = substr_count($tmp_CAF_Data, ';') ?: $tmp_CFM_Count = 0;
+			$tmp_CFM_DataLength = strlen($tmp_CAF_Data) ?: $tmp_CFM_DataLength = 0;
+			if(isset($tmp_CFM_Count) === True and isset($tmp_CFM_DataLength) === True and is_integer($tmp_CFM_DataLength) === True and is_integer($tmp_CFM_Count) === True and $tmp_CFM_Count > 0 and $tmp_CFM_DataLength > 5){
 				for($x = 0; $x < $tmp_CFM_Count; $x++){
 					$tmp_CFM_tmp = ' ';
 					$tmp_CFM_tmpLength = 0;
 					$tmp_CFM_tmpExact = ' ';
-					$tmp_CFM_tmp = explode(';', $tmp_CF_Data)[$x].';' ?: $tmp_CFM_tmp = ' ';
+					$tmp_CFM_tmp = explode(';', $tmp_CAF_Data)[$x].';' ?: $tmp_CFM_tmp = ' ';
 					$tmp_CFM_tmpLength = strlen($tmp_CFM_tmp) ?: $tmp_CFM_tmpLength = 'a';
 					$tmp_CFM_tmpExact = ';'.$tmp_CFM_tmp ?: $tmp_CFM_tmpExact = ' ';
-					if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and !empty($tmp_CFM_tmpExact) and is_string($tmp_CFM_tmpExact) === True and !empty($tmp_CFM_tmpLength) and is_integer($tmp_CFM_tmpLength) === True and $tmp_CFM_tmpLength > 5 and $tmp_CFM_tmpLength <= 15 and !empty($tmp_CFM_Return) and is_string($tmp_CFM_Return) === True and substr_count($tmp_CFM_tmp, ';') === 1 and (substr_count($tmp_CFM_Return, ';') < 1 or str_contains($tmp_CFM_Return, $tmp_CFM_tmpExact) === False)){
+					if(isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === True and isset($tmp_CFM_tmpExact) === True and is_string($tmp_CFM_tmpExact) === True and isset($tmp_CFM_tmpLength) === True and is_integer($tmp_CFM_tmpLength) === True and $tmp_CFM_tmpLength > 5 and $tmp_CFM_tmpLength <= 15 and isset($tmp_CFM_Return) === True and is_string($tmp_CFM_Return) === True and substr_count($tmp_CFM_tmp, ';') === 1 and substr_count($tmp_CFM_tmpExact, ';') === 2 and (substr_count($tmp_CFM_Return, ';') < 1 or str_contains($tmp_CFM_Return, $tmp_CFM_tmpExact) === False)){
 						$tmp_CFM_AllowedChars = $this->AllowedChars.$this->AllowedNums.';' ?: $tmp_CFM_AllowedChars = '';
 						for($n = 0; $n < $tmp_CFM_tmpLength; $n++){
-							if($n > 14 or strlen($tmp_CFM_tmp) <= 5){
-								$tmp_CFM_tmp = ' ';
-								break;
-							}
 							$tmp_CFM_tmpName = ' ';
-							if(!empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and $n <= strlen($tmp_CFM_tmp) - 1){
+							if(isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 5 and $n <= strlen($tmp_CFM_tmp) - 1){
 								$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
 							}else{
 								$tmp_CFM_tmp = ' ';
@@ -97,7 +93,7 @@ Class GetU_Class{
 						}
 						if(!empty($tmp_CFM_Return) and is_string($tmp_CFM_Return) === True and !empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) === False){
 							$tmp_add_name = '';
-							$tmp_add_name = explode(';', $tmp_CF_Data)[$x] . ';' ?: $tmp_add_name = '';
+							$tmp_add_name = explode(';', $tmp_CAF_Data)[$x] . ';' ?: $tmp_add_name = '';
 							if(empty($tmp_add_name)){
 								$tmp_add_name = '';
 								$For_Extended_Ip = $this->tmp_ipaddress ?: $For_Extended_Ip = 'Unkown';
@@ -109,14 +105,14 @@ Class GetU_Class{
 							$tmp_add_name = '';
 						}
 					}
-					$tmp_CFM_tmp = ' ';
+					$tmp_CFM_tmp = '';
 					$tmp_CFM_tmpLength = 0;
-					$tmp_CFM_tmpExact = ' ';
+					$tmp_CFM_tmpExact = '';
 				}
 			}
 			$tmp_CFM_Count = 0;
 			$tmp_CFM_DataLength = 0;
-			$tmp_CF_Data = '';
+			$tmp_CAF_Data = '';
 		}
 		return $tmp_CFM_Return;
 	}
