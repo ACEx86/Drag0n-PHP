@@ -23,18 +23,18 @@ date_default_timezone_set('UTC');
 $Get_UserName = null; // Username
 $Get_AccessToken = null; // AccessToken
 $Get_SACData = 2; // Data Actions
-if(!empty($_GET) and is_array($_GET) === True){
-	if(!empty($_GET['n'])){
-		$Get_UserName = $_GET['n'] ?: $Get_UserName = null;
+if(!empty($_POST) and is_array($_POST) === True){
+	if(!empty($_POST['n']) and is_string($_POST['n']) === True){
+		$Get_UserName = $_POST['n'] ?: $Get_UserName = null;
 	}
-	if(!empty($_GET['p'])){
-		$Get_AccessToken = $_GET['p'] ?: $Get_AccessToken = null;
+	if(!empty($_POST['p']) and is_string($_POST['p']) === True){
+		$Get_AccessToken = $_POST['p'] ?: $Get_AccessToken = null;
 	}
-	if(!empty($_GET['i'])){
-		$Get_SACData = $_GET['i'] ?: $Get_SACData = '2';
+	if(!empty($_POST['i']) and is_string($_POST['i']) === True){
+		$Get_SACData = $_POST['i'] ?: $Get_SACData = '2';
 	}
 }
-unset($_GET);
+unset($_POST);
 $GetU = new GetU_Class($Get_UserName, $Get_AccessToken, $Get_SACData);
 //
 Class GetU_Class{
