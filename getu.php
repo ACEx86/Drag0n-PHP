@@ -103,7 +103,7 @@ Class GetU_Class{
 								$For_Extended_Ip = $this->tmp_ipaddress ?: $For_Extended_Ip = 'Unkown';
 								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('CheckAndFix: Failled to validate on insert data. With IP Address: '.$For_Extended_Ip);
 							}
-							if(is_string($tmp_CFM_tmp) === True and $tmp_add_name === $tmp_CFM_tmp){
+							if(is_string($tmp_CFM_tmp) === True and $tmp_add_name === $tmp_CFM_tmp and strlen($tmp_add_name) === strlen($tmp_CFM_tmp)){
 								strlen($tmp_CFM_Return) <= 5 ? $tmp_CFM_Return = $tmp_CFM_tmp : $tmp_CFM_Return = $tmp_CFM_Return . $tmp_CFM_tmp;
 							}
 							$tmp_add_name = '';
