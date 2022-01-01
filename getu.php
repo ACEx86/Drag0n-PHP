@@ -72,26 +72,30 @@ Class GetU_Class{
 							if(isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and $n <= strlen($tmp_CFM_tmp) - 1){
 								$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
 							}else{
+								$tmp_CFM_tmpName = '';
 								$tmp_CFM_tmp = ' ';
 								break;
 							}
 							if(isset($tmp_CFM_tmpName) === True and is_string($tmp_CFM_tmpName) === True and strlen($tmp_CFM_tmpName) === 1 and isset($tmp_CFM_AllowedChars) === True and is_string($tmp_CFM_AllowedChars) === True and strlen($tmp_CFM_AllowedChars) === 63 and str_contains($tmp_CFM_AllowedChars, $tmp_CFM_tmpName) === True){
-								if(!empty($tmp_CFM_tmpLength) and !empty($tmp_CFM_tmp) and !empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmp) === False and is_integer($tmp_CFM_tmpLength) === False and (str_contains(';' , $tmp_CFM_tmpName) === True and $n != strlen($tmp_CFM_tmp) - 1 or $n != $tmp_CFM_tmpLength) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n == strlen($tmp_CFM_tmp) - 1 or $n == $tmp_CFM_tmpLength)){
+								if(!empty($tmp_CFM_tmpLength) and !empty($tmp_CFM_tmp) and !empty($tmp_CFM_tmpName) and is_string($tmp_CFM_tmp) === False and is_integer($tmp_CFM_tmpLength) === False and strlen($tmp_CFM_tmp) != $tmp_CFM_tmpLength and (str_contains(';' , $tmp_CFM_tmpName) === True and $n != strlen($tmp_CFM_tmp) - 1) or (str_contains(';' , $tmp_CFM_tmpName) === False and $n == strlen($tmp_CFM_tmp) - 1)){
+									$tmp_CFM_tmpName = '';
 									$tmp_CFM_tmp = ' ';
 									break;
 								}else{
-									if(isset($tmp_CFM_tmpLength) === False or isset($tmp_CFM_tmp) === False or isset($tmp_CFM_tmpName) === False or (isset($tmp_CFM_tmpLength) and is_integer($tmp_CFM_tmpLength) === False) or (isset($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === False)){
+									if(isset($tmp_CFM_tmpLength) === False or isset($tmp_CFM_tmp) === False or isset($tmp_CFM_tmpName) === False or (isset($tmp_CFM_tmpLength) === True and is_integer($tmp_CFM_tmpLength) === False) or (isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === False) or (isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === False)){
+										$tmp_CFM_tmpName = '';
 										$tmp_CFM_tmp = ' ';
 										break;
 									}
 								}
 							}else{
+								$tmp_CFM_tmpName = '';
 								$tmp_CFM_tmp = ' ';
 								break;
 							}
-							$tmp_CFM_tmpName = ' ';
+							$tmp_CFM_tmpName = '';
 						}
-						if(!empty($tmp_CFM_Return) and is_string($tmp_CFM_Return) === True and !empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and str_contains($tmp_CFM_Return, $tmp_CFM_tmp) === False){
+						if(isset($tmp_CFM_Return) === True and is_string($tmp_CFM_Return) === True and !empty($tmp_CFM_tmp) and is_string($tmp_CFM_tmp) === True and !empty($tmp_CFM_tmpExact) and is_string($tmp_CFM_tmp_Exact) === True and strlen($tmp_CFM_tmpExact) === strlen($tmp_CFM_tmp) + 1 and str_contains($tmp_CFM_tmpExact, $tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and (substr_count($tmp_CFM_Return, ';') < 1 or str_contains($tmp_CFM_Return, $tmp_CFM_tmpExact) === False)){
 							$tmp_add_name = '';
 							$tmp_add_name = explode(';', $tmp_CAF_Data)[$x] . ';' ?: $tmp_add_name = '';
 							if(empty($tmp_add_name)){
