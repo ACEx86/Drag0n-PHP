@@ -451,7 +451,7 @@ Class GetU_Class{
 				}
 				clearstatcache();
 				if(isset($bannedforhourfolder) === True and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
-					if(is_writeable() === True){
+					if(is_writeable($bannedforhourfolder) === True){
 						if(mkdir($bannedforhourfolder, 0600) === False and $this->ExtendedLogging_E === True){
 							// Reference : Critical_3.4
 							$this->Extended_Logging('We could not create the folder for writing packet counts : '.$bannedforhourfolder.'  . Reference : Critical_3.4');
