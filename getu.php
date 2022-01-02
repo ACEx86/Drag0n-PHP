@@ -381,11 +381,11 @@ Class GetU_Class{
 						if(is_writeable($rootfolder) === True){
 							if(mkdir($rootfolder, 0600) === False and $this->ExtendedLogging_E === True){
 								// Reference : Critical_1.4
-								$this->Extended_Logging('We could not create the one time folder for writing packet counts : '.$rootfolder.'  . Reference : Critical_1.4');
+								$this->Extended_Logging('We could not create the folder for writing packet counts : '.$rootfolder.' . Reference : Critical_1.4');
 							}
 						}else{
 							// Reference : Critical_1.5
-							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts : '.$rootfolder.' , seem to not exist and we do not have the permission to create it. Reference : Critical_1.5');
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' , seem to not exist and we do not have the permission to create it. Reference : Critical_1.5');
 						}
 					}else{
 						if(isset($rootfolder) === True){
@@ -393,15 +393,15 @@ Class GetU_Class{
 								clearstatcache();
 								if(file_exists($rootfolder) === False){
 									// Reference : Critical_1.2
-									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts : '.$rootfolder.' does not exist. It seemed existen. Reference : Critical_1.2');
+									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' does not exist. It seemed existen. Reference : Critical_1.2');
 								}
 							}else{
 								// Reference : Critical_1.1
-								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts could not be determined. The variable is not a string. Reference : Critical_1.1');
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is not a string. Reference : Critical_1.1');
 							}
 						}else{
 							// Reference : Critical_1.0
-							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts could not be determined. The variable is unset even after we tried to set it. Reference : Critical_1.0');
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset even after we tried to set it. Reference : Critical_1.0');
 						}
 					}
 					clearstatcache();
@@ -409,11 +409,11 @@ Class GetU_Class{
 						if(is_writeable() === True){
 							if(mkdir($bansfolder, 0600) === False and $this->ExtendedLogging_E === True){
 								// Reference : Critical_2.4
-								$this->Extended_Logging('We could not create the one time folder for writing packet counts : '.$bansfolder.'  . Reference : Critical_2.4');
+								$this->Extended_Logging('We could not create the folder for writing packet counts : '.$bansfolder.'  . Reference : Critical_2.4');
 							}
 						}else{
 							// Reference : Critical_2.5
-							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts : '.$bansfolder.' , seem to not exist and we do not have the permission to create it. Reference : Critical_2.5');
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bansfolder.' , seem to not exist and we do not have the permission to create it. Reference : Critical_2.5');
 						}
 					}else{
 						if(isset($bansfolder) === True){
