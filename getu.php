@@ -451,50 +451,30 @@ Class GetU_Class{
 				}
 				clearstatcache();
 				if(isset($bannedforhourfolder) === True and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
-					if(is_writeable($bannedforhourfolder) === True){
+					if(is_writeable() === True){
 						if(mkdir($bannedforhourfolder, 0600) === False and $this->ExtendedLogging_E === True){
-							$this->Extended_Logging('We could not create the folder for writing packet counts : '.$bannedforhourfolder);
-						}
-					}elseif(is_writeable($bannedforhourfolder) === False){
-						clearstatcache();
-						if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === False){
-							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seem to not exist and we do not have the permission to create it.');
-						}elseif(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True){
-							if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True and is_writeable($bannedforhourfolder) === False){
-								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seemed not existen before and that we did not had the permission to create it, but it was created.');
-							}elseif(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True and is_writeable($bannedforhourfolder) === True){
-								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seemed not existen before and that we did not had the permission to create it, but it was created and we have the permissions now.');
-							}else{
-								if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === False){
-									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts is not generated and the variable storing it is not a string. The variable existed before and it was a string.');
-								}else{
-									if(isset($bannedforhourfolder) === False){
-										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset and it existed before. Also we did not had the permissions to write to it but the file created after.');
-									}else{
-										//Reference: Critical_3
-										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('We could not determine what happened but it happened. Something seem to change real time the data that we try to access. Reference: Critical2');
-									}
-								}
-							}
-						}else{
-							if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === False){
-								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts is not generated and the variable storing it is not a string.');
-							}else{
-								if(isset($bannedforhourfolder) === False){
-									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset and it existed before.');
-								}
-							}
+							// Reference : Critical_3.4
+							$this->Extended_Logging('We could not create the folder for writing packet counts : '.$bannedforhourfolder.'  . Reference : Critical_3.4');
 						}
 					}else{
-						//
+						// Reference : Critical_3.5
+						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seem to not exist and we do not have the permission to create it. Reference : Critical_3.5');
 					}
 				}else{
-					if(isset($bannedforhourfolder) and is_string($bannedforhourfolder) === False){
-						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts is not generated and the variable storing it is not a string.');
-					}else{
-						if(isset($bannedforhourfolder) === False){
-							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset.');
+					if(isset($bannedforhourfolder) === True){
+						if(is_string($bannedforhourfolder) === True){
+							clearstatcache();
+							if(file_exists($bannedforhourfolder) === True){
+								// Reference : Critical_3.3
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bannedforhourfolder.' , seemed not existen before but it exist now. We did not created it. Reference : Critical_3.3');
+							}
+						}else{
+							// Reference : Critical_3.1
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is not a string even if it was before. Reference : Critical_3.1');
 						}
+					}else{
+						// Reference : Critical_3.0
+						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset even if it was not before. Reference : Critical_3.0');
 					}
 				}
 			}
