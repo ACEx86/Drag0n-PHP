@@ -359,7 +359,7 @@ Class GetU_Class{
 	// /*/ Code /*/ //
 	Private Function GetU_Start($Get_UserName, $Get_AccessToken, $Get_SACData){
 		$tmp_ipaddress = $this->Get_IpAddress() ?: $tmp_ipaddress = '';
-		if(!empty($tmp_ipaddress) and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) === 64){
+		if(isset($tmp_ipaddress) === True and is_string($tmp_ipaddress) === True and strlen($tmp_ipaddress) === 64){
 			// ** Create Date Hash
 			$tmp_daymonthyearhour = 'cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 			$tmp_daymonthyearhour = hash('sha256', date("d:m:Y:G")) ?: $tmp_daymonthyearhour = 'cafeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'; // X2
@@ -377,37 +377,76 @@ Class GetU_Class{
 				if(isset($bansfolder) === True and is_string($bansfolder) === True and file_exists($bansfolder) === False){
 					$rootfolder = '../Dba';
 					clearstatcache();
-					if(isset($rootfolder) === True and is_string($rootfolder) === True and file_exists($rootfolder) === False and is_writeable($rootfolder) === True){
-						if(mkdir($rootfolder, 0600) === False and $this->ExtendedLogging_E === True){
-							$this->Extended_Logging('We could not create the folder for writing packet counts : '.$rootfolder);
+					if(isset($rootfolder) === True and is_string($rootfolder) === True and file_exists($rootfolder) === False){
+						if(is_writeable($rootfolder) === True){
+							if(mkdir($rootfolder, 0600) === False and $this->ExtendedLogging_E === True){
+								// Reference : Critical_1.4
+								$this->Extended_Logging('We could not create the one time folder for writing packet counts : '.$rootfolder.'  . Reference : Critical_1.4');
+							}
+						}else{
+							// Reference : Critical_1.5
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts : '.$rootfolder.' , seem to not exist and we do not have the permission to create it. Reference : Critical_1.5');
 						}
 					}else{
 						if(isset($rootfolder) === True){
 							if(is_string($rootfolder) === True){
 								clearstatcache();
 								if(file_exists($rootfolder) === False){
-									if(is_writable($rootfolder) === False){
-										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' , seem to not exist and we do not have the permission to create it.');
-									}else{
-										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' , seem to not exist and that we could not create it because we did not had the permission before even if we have them now.');
-									}
-								}else{
-									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$rootfolder.' , seemed not existen before but it exist now.');
+									// Reference : Critical_1.2
+									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts : '.$rootfolder.' does not exist. It seemed existen. Reference : Critical_1.2');
 								}
 							}else{
-								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is not a string.');
+								// Reference : Critical_1.1
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts could not be determined. The variable is not a string. Reference : Critical_1.1');
 							}
 						}else{
-							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset even after we tried to set it.');
+							// Reference : Critical_1.0
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts could not be determined. The variable is unset even after we tried to set it. Reference : Critical_1.0');
 						}
 					}
 					clearstatcache();
-					if(isset($bansfolder) === True and is_string($bansfolder) === True and file_exists($bansfolder) === False and is_writeable($bansfolder) === True){
-						if(mkdir($bansfolder, 0600) === False and $this->ExtendedLogging_E === True){
-							$this->Extended_Logging('AA');
+					if(isset($bansfolder) === True and is_string($bansfolder) === True and file_exists($bansfolder) === False){
+						if(is_writeable() === True){
+							if(mkdir($bansfolder, 0600) === False and $this->ExtendedLogging_E === True){
+								// Reference : Critical_2.4
+								$this->Extended_Logging('We could not create the one time folder for writing packet counts : '.$bansfolder.'  . Reference : Critical_2.4');
+							}
+						}else{
+							// Reference : Critical_2.5
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts : '.$bansfolder.' , seem to not exist and we do not have the permission to create it. Reference : Critical_2.5');
 						}
 					}else{
-						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('AA');
+						if(isset($bansfolder) === True){
+							if(is_string($bansfolder) === True){
+								clearstatcache();
+								if(file_exists($bansfolder) === True){
+									// Reference : Critical_2.9
+									$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts : '.$bansfolder.' , seemed not existen before but it exist now. We did not created it. Reference : Critical_2.9');
+								}
+							}else{
+								// Reference : Critical_2.7
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is not a string even if it was before. Reference : Critical_2.7');
+							}
+						}else{
+							// Reference : Critical_2.6
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset even if it was not before. Reference : Critical_2.6');
+						}
+					}
+				}else{
+					if(isset($bansfolder) === True){
+						if(is_string($bansfolder) === True){
+							clearstatcache();
+							if(file_exists($bansfolder) === False){
+								// Reference : Critical_2.2
+								$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts : '.$bansfolder.' does not exist. It seemed existen. Reference : Critical_2.2');
+							}
+						}else{
+							// Reference : Critical_2.1
+							$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts could not be determined. The variable is not a string. Reference : Critical_2.1');
+						}
+					}else{
+						// Reference : Critical_2.0
+						$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The one time creating folder for writing packet counts could not be determined. The variable is unset even after we tried to set it. Reference : Critical_2.0');
 					}
 				}
 				clearstatcache();
@@ -432,7 +471,7 @@ Class GetU_Class{
 									if(isset($bannedforhourfolder) === False){
 										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('The folder for writing packet counts could not be determined. The variable is unset and it existed before. Also we did not had the permissions to write to it but the file created after.');
 									}else{
-										//Reference: Critical2
+										//Reference: Critical_3
 										$this->ExtendedLogging_E === False ?: $this->Extended_Logging('We could not determine what happened but it happened. Something seem to change real time the data that we try to access. Reference: Critical2');
 									}
 								}
@@ -468,15 +507,15 @@ Class GetU_Class{
 				$fourfileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/4.'.$tmp_ipaddress.'.bip' ?: $fourfileip = '../Dba/iprb';
 				$fivefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/5.'.$tmp_ipaddress.'.bip' ?: $fivefileip = '../Dba/iprb';
 				clearstatcache();
-				if(file_exists($fivefileip)){
+				if(file_exists($fivefileip) === True){
 					$tmp_ip_blockedrequests = 5;
-				}elseif(file_exists($fourfileip)){
+				}elseif(file_exists($fourfileip) === True){
 					$tmp_ip_blockedrequests = 4;
-				}elseif(file_exists($threefileip)){
+				}elseif(file_exists($threefileip) === True){
 					$tmp_ip_blockedrequests = 3;
-				}elseif(file_exists($twofileip)){
+				}elseif(file_exists($twofileip) === True){
 					$tmp_ip_blockedrequests = 2;
-				}elseif(file_exists($onefileip)){
+				}elseif(file_exists($onefileip) === True){
 					$tmp_ip_blockedrequests = 1;
 				}
 			}
