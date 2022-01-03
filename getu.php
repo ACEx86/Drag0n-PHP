@@ -480,7 +480,7 @@ Class GetU_Class{
 			}
 			$tmp_ip_blockedrequests = 0;
 			clearstatcache();
-			if(!empty($bannedforhourfolder) and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True){
+			if(isset($bannedforhourfolder) === True and is_string($bannedforhourfolder) === True and file_exists($bannedforhourfolder) === True){
 				$onefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/1.'.$tmp_ipaddress.'.bip' ?: $onefileip = '../Dba/iprb';
 				$twofileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/2.'.$tmp_ipaddress.'.bip' ?: $twofileip = '../Dba/iprb';
 				$threefileip = '../Dba/iprb/'.$tmp_daymonthyearhour.'/3.'.$tmp_ipaddress.'.bip' ?: $threefileip = '../Dba/iprb';
@@ -502,29 +502,29 @@ Class GetU_Class{
 			if($tmp_ip_blockedrequests >= 0 and $tmp_ip_blockedrequests < 5){
 				is_string($Get_UserName) === True ? $UserName = urlencode($Get_UserName) : $UserName = ' ';
 				is_string($Get_AccessToken) === True ? $AccessToken = $Get_AccessToken : $AccessToken = ' ';
-				is_string($Get_SACData) === True ? $SACData = urlencode($Get_SACData) : $SACData = 2;
+				is_string($Get_SACData) === True ? $SACData = urlencode($Get_SACData) : $SACData = '2';
 				// For UserName
 				for($n = 0; $n < strlen($UserName); $n++){
-					if($n > 13 or strlen($UserName) < 5){
+					$tmp_allowedchars = $this->AllowedChars.$this->AllowedNums ?: $tmp_allowedchars = '';
+					$tmp_Name = ' ';
+					if(isset($UserName) === True and is_string($UserName) === True and strlen($UserName) > 5 and strlen($UserName) <= 15 and $n <= strlen($UserName) - 1){
+						$tmp_Name = $UserName[$n] ?: $tmp_Name = ' ';
+					}else{
 						$UserName = ' ';
 						break;
 					}
-					$tmp_allowedchars = $this->AllowedChars.$this->AllowedNums ?: $tmp_allowedchars = '';
-					$tmp_Name = ' ';
-					if(!empty($UserName) and is_string($UserName) === True and $n <= strlen($UserName) - 1){
-						$tmp_Name = $UserName[$n] ?: $tmp_Name = ' ';
-					}
-					if(!empty($tmp_allowedchars) and !empty($tmp_Name) and is_string($tmp_allowedchars) === True and is_string($tmp_Name) === True and strlen($tmp_allowedchars) <= 1 and strlen($tmp_Name) < 1 and strlen($tmp_Name) > 1 and str_contains($tmp_allowedchars, $tmp_Name) === False){
+					if(isset($tmp_allowedchars) === True and isset($tmp_Name) === True and is_string($tmp_allowedchars) === True and is_string($tmp_Name) === True and strlen($tmp_allowedchars) === 62 and strlen($tmp_Name) === 1){
+						if(str_contains($tmp_allowedchars, $tmp_Name) === False){
+							$UserName = ' ';
+							break;
+						}
+					}else{
 						$UserName = ' ';
 						break;
 					}
 				}
 				// For AccessToken
 				for($n = 0; $n < strlen($AccessToken); $n++){
-					if($n > 66 or strlen($AccessToken) < 66){
-						$AccessToken = ' ';
-						break;
-					}
 					$tmp_allowedchars = $this->AllowedChars.$this->AllowedNums ?: $tmp_allowedchars = '';
 					if($n === 64){
 						$tmp_allowedchars = ':';
@@ -532,28 +532,29 @@ Class GetU_Class{
 						$tmp_allowedchars = $this->AllowedNums ?: $tmp_allowedchars = '';
 					}
 					$tmp_AccessToken_Chars = ' ';
-					if(!empty($AccessToken) and is_string($AccessToken) === True and $n <= strlen($AccessToken) - 1){
+					if(!empty($AccessToken) and is_string($AccessToken) === True and strlen($AccessToken) > 63 and strlen($AccessToken) < 67 and $n <= strlen($AccessToken) - 1){
 						$tmp_AccessToken_Chars = $AccessToken[$n] ?: $tmp_AccessToken_Chars = ' ';
+					}else{
+						$AccessToken = ' ';
+						break;
 					}
-					if(!empty($tmp_allowedchars) and !empty($tmp_AccessToken_Chars) and is_string($tmp_allowedchars) === True and is_string($tmp_AccessToken_Chars) === True and strlen($tmp_allowedchars) <= 1 and strlen($tmp_AccessToken_Chars) < 1 and strlen($tmp_AccessToken_Chars) > 1 and str_contains($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
+					if(isset($tmp_allowedchars) === True and isset($tmp_AccessToken_Chars) === True and is_string($tmp_allowedchars) === True and is_string($tmp_AccessToken_Chars) === True and strlen($tmp_allowedchars) >= 1 and strlen($tmp_AccessToken_Chars) === 1){
+						if(str_contains($tmp_allowedchars, $tmp_AccessToken_Chars) === False){
+							$AccessToken = ' ';
+							break;
+						}
+					}else{
 						$AccessToken = ' ';
 						break;
 					}
 				}
 				// For SACData
-				for($n = 0; $n < strlen($SACData); $n++){
-					if($n > 1){
-						$SACData = 2;
-						break;
+				if(isset($SACData) === True and is_string($SACData) === True and strlen($SACData) === 1){
+					if(str_contains($this->AllowedNums, $SACData) === False){
+						$SACData = '2';
 					}
-					$tmp_SACData_Chars = ' ';
-					if(!empty($SACData) and is_string($SACData) === True){
-						$tmp_SACData_Chars = $SACData[$n] ?: $tmp_SACData_Chars = ' ';
-					}
-					if(str_contains($this->AllowedNums, $tmp_SACData_Chars) === False){
-						$SACData = 2;
-						break;
-					}
+				}else{
+					$SACData = '2';
 				}
 				if(is_string($UserName) === True and strpos($UserName, '.') === False and strpos($UserName, '%') === False and strpos($UserName, '/') === False and strpos($UserName, '<') === False and strpos($UserName, '>') === False and strpos($UserName, '$') === False and is_string($AccessToken) === True and strpos($AccessToken, '.') === False and strpos($AccessToken, '%') === False and strpos($AccessToken, '/') === False and strpos($AccessToken, '<') === False and strpos($AccessToken, '>') === False and strpos($AccessToken, '$') === False and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and $SACData > 0){
 					$UserName = strtolower($UserName) ?: $UserName = ' ';
