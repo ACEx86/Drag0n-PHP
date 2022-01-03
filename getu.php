@@ -69,7 +69,7 @@ Class GetU_Class{
 						$tmp_CFM_AllowedChars = $this->AllowedChars.$this->AllowedNums.';' ?: $tmp_CFM_AllowedChars = '';
 						for($n = 0; $n < $tmp_CFM_tmpLength; $n++){
 							$tmp_CFM_tmpName = ' ';
-							if(isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and $n <= strlen($tmp_CFM_tmp) - 1){
+							if($n >= 0 and $n <= 15 and isset($tmp_CFM_tmp) === True and is_string($tmp_CFM_tmp) === True and strlen($tmp_CFM_tmp) > 5 and strlen($tmp_CFM_tmp) <= 15 and $n <= strlen($tmp_CFM_tmp) - 1){
 								$tmp_CFM_tmpName = $tmp_CFM_tmp[$n];
 							}else{
 								$tmp_CFM_tmpName = '';
@@ -507,7 +507,7 @@ Class GetU_Class{
 				for($n = 0; $n < strlen($UserName); $n++){
 					$tmp_allowedchars = $this->AllowedChars.$this->AllowedNums ?: $tmp_allowedchars = '';
 					$tmp_Name = ' ';
-					if(isset($UserName) === True and is_string($UserName) === True and strlen($UserName) > 5 and strlen($UserName) <= 15 and $n <= strlen($UserName) - 1){
+					if($n >= 0 and $n < 15 and isset($UserName) === True and is_string($UserName) === True and strlen($UserName) > 5 and strlen($UserName) < 15 and $n <= strlen($UserName) - 1){
 						$tmp_Name = $UserName[$n] ?: $tmp_Name = ' ';
 					}else{
 						$UserName = ' ';
@@ -532,7 +532,7 @@ Class GetU_Class{
 						$tmp_allowedchars = $this->AllowedNums ?: $tmp_allowedchars = '';
 					}
 					$tmp_AccessToken_Chars = ' ';
-					if(!empty($AccessToken) and is_string($AccessToken) === True and strlen($AccessToken) > 63 and strlen($AccessToken) < 67 and $n <= strlen($AccessToken) - 1){
+					if($n >= 0 and $n < 66 and !empty($AccessToken) and is_string($AccessToken) === True and strlen($AccessToken) > 63 and strlen($AccessToken) < 67 and $n <= strlen($AccessToken) - 1){
 						$tmp_AccessToken_Chars = $AccessToken[$n] ?: $tmp_AccessToken_Chars = ' ';
 					}else{
 						$AccessToken = ' ';
