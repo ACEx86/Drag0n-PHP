@@ -556,7 +556,7 @@ Class GetU_Class{
 				}else{
 					$SACData = '2';
 				}
-				if(is_string($UserName) === True and strpos($UserName, '.') === False and strpos($UserName, '%') === False and strpos($UserName, '/') === False and strpos($UserName, '<') === False and strpos($UserName, '>') === False and strpos($UserName, '$') === False and is_string($AccessToken) === True and strpos($AccessToken, '.') === False and strpos($AccessToken, '%') === False and strpos($AccessToken, '/') === False and strpos($AccessToken, '<') === False and strpos($AccessToken, '>') === False and strpos($AccessToken, '$') === False and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and $SACData > 0){
+				if(is_string($UserName) === True and is_string($AccessToken) === True and is_string($SACData) === True and substr_count($AccessToken, ':') === 1 and strlen($UserName) > 4 and strlen($UserName) < 15 and strlen($AccessToken) > 65 and strlen($AccessToken) <= 67 and $SACData > 0){
 					$UserName = strtolower($UserName) ?: $UserName = ' ';
 					$tmp_AccessToken_GT = explode(':', $AccessToken)[0] ?: $tmp_AccessToken_GT = 0; // Access Token
 					$tmp_AccessToken_AC = explode(':', $AccessToken)[1] ?: $tmp_AccessToken_AC = 0; // File Indicator
