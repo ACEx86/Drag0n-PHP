@@ -2,10 +2,13 @@
 Here i build an "old school" management system for servers written in PHP.
 
 This source is not optimized to save you space or time go use a database or DB-Management system if you want.
-This 'project' is currently under active build and the code updates are slow since i build it for fun.
-# Compatibility
-1. For better compatibility on how the php works i suggest to run this on a Linux Server with the latest php version installed.
-2. PHP version requirment: 8 or newer
+
+This 'project' is currently under active build and the <b>code updates are slow</b> since i re-build it for fun as an open source php server side social-messaging platform.
+# To-DO
+My to do list, after i upload the first files, is to update the server side to work with full account encryption and add some Public - Private Key communication between the server and the client inside the protocol one.
+# Compatibility and Requirements
+1. For better compatibility on how the php and the server side works i suggest to run this on a Linux Server with the latest php version installed.
+2. PHP required version: 8 or newer
 # Logs and Data
 The php creates temp files:
 1. The IP of those who contact the php files (Hashed)
