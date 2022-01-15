@@ -1,5 +1,7 @@
 # Drag0n-PHP Public
-Here i build an "old school" management system for servers written in PHP. This source is not optimized to save you space or time go use a database or DB-Management system if you want.
+Here i build an "old school" management system for servers written in PHP.
+
+This source is not optimized to save you space or time go use a database or DB-Management system if you want.
 This 'project' is currently under active build and the code updates are slow since i build it for fun.
 # Compatibility
 1. For better compatibility on how the php works i suggest to run this on a Linux Server with the latest php version installed.
